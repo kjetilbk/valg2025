@@ -1,4 +1,4 @@
-import { calculateCurrentAverage } from './pollingAverages';
+import { calculateCurrentAverage, type WeightingMethod } from './pollingAverages';
 import type { AdjustedPoll, CurrentStandings } from './types';
 import { PARTY_NAMES } from './types';
 import { drawWatermark } from './watermark';
@@ -25,11 +25,13 @@ export function getCurrentStandings(
     lookbackDays: number = 14,
     options: {
         sortByPercentage?: boolean;
+        weighting?: WeightingMethod;
+        halfLife?: number;
     } = {}
 ): CurrentStandings | null {
-    const { sortByPercentage = true } = options;
+    const { sortByPercentage = true, weighting = 'none', halfLife = 7 } = options;
 
-    const currentAverage = calculateCurrentAverage(adjustedPolls, lookbackDays);
+    const currentAverage = calculateCurrentAverage(adjustedPolls, lookbackDays, weighting, halfLife);
 
     if (!currentAverage) return null;
 

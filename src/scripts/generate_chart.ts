@@ -2,13 +2,18 @@
 
 import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from '../index';
+import type { WeightingMethod } from '../pollingAverages';
 
 async function generateChart() {
     console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
     console.log('===============================================\n');
 
-    // Get command line arguments for lookback days
+    // Get command line arguments
     const lookbackDays = parseInt(process.argv[2] || '14', 10) || 14;
+    const weightingArg = process.argv[4] as WeightingMethod | undefined;
+    const weighting: WeightingMethod = weightingArg && ['linear', 'exponential', 'quadratic'].includes(weightingArg) 
+        ? weightingArg 
+        : 'none';
     
     try {
         // Load and analyze data first to get latest poll date
@@ -23,7 +28,10 @@ async function generateChart() {
         }
 
         // Get current standings (keep original party order as in PARTY_NAMES)
-        const standings = getCurrentStandings(analysis.adjustedPolls, lookbackDays, { sortByPercentage: false });
+        const standings = getCurrentStandings(analysis.adjustedPolls, lookbackDays, { 
+            sortByPercentage: false,
+            weighting
+        });
         
         if (!standings) {
             console.log('❌ Ingen måledata tilgjengelig for angitt tidsramme');
@@ -56,6 +64,9 @@ async function generateChart() {
         }
 
         console.log(`📊 Genererer diagram med ${lookbackDays}-dagers tilbakeblikk...`);
+        if (weighting !== 'none') {
+            console.log(`⚖️  Vekting: ${weighting} (nyere målinger gis mer vekt)`);
+        }
         console.log(`💾 Utdatafil: ${filename}\n`);
 
         console.log('📈 Nåværende Stilling:');
@@ -92,23 +103,27 @@ async function generateChart() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
-    console.log('Bruk: npx tsx src/scripts/generate_chart.ts [tilbakeblikk_dager] [utdatafil]');
+    console.log('Bruk: npx tsx src/scripts/generate_chart.ts [tilbakeblikk_dager] [utdatafil] [vekting]');
     console.log('');
     console.log('Genererer house-effect-justerte meningsmålingdiagrammer med:');
     console.log('• Vertikale søyler (går oppover fra bunnen)');
     console.log('• Partietiketter på bunnnaksen');  
     console.log('• Dataverdier vist på toppen av hver søyle');
-    console.log('• Original partirekkefølge (Ap, Høyre, Frp, SV, Sp, KrF, Venstre, MDG, Rødt, Andre)');
+    console.log('• Blokk-sortert partirekkefølge (Rødt→SV→Ap→Sp→MDG→Andre→KrF→Venstre→Høyre→Frp)');
     console.log('• Norske partifarger');
+    console.log('• Valgfri vekting av nyere målinger');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx src/scripts/generate_chart.ts                    # 14-dagers tilbakeblikk, auto filnavn i charts/');
-    console.log('  npx tsx src/scripts/generate_chart.ts 7                  # 7-dagers tilbakeblikk, auto filnavn i charts/');
-    console.log('  npx tsx src/scripts/generate_chart.ts 21 mitt_diagram.png    # 21-dagers tilbakeblikk, tilpasset filnavn');
+    console.log('  npx tsx src/scripts/generate_chart.ts                           # 14-dagers tilbakeblikk, ingen vekting');
+    console.log('  npx tsx src/scripts/generate_chart.ts 7                         # 7-dagers tilbakeblikk, ingen vekting');
+    console.log('  npx tsx src/scripts/generate_chart.ts 14 poll.png               # Tilpasset filnavn');
+    console.log('  npx tsx src/scripts/generate_chart.ts 14 poll.png exponential   # Eksponentiell vekting');
+    console.log('  npx tsx src/scripts/generate_chart.ts 21 "" linear              # Linear vekting, auto-filnavn');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');
-    console.log('  utdatafil          PNG-filnavn (standard: charts/polling-YYYY-MM-DD-{dager}day.png)');
+    console.log('  utdatafil          PNG-filnavn (standard: auto-generert med polldato)');
+    console.log('  vekting            Vektingsmetode: none (standard), linear, exponential, quadratic');
     process.exit(0);
 }
 

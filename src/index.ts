@@ -3,7 +3,7 @@ export { analyzeNorwegianPolls } from './analysis';
 export { parseNorwegianPolls } from './dataParser';
 export { applyHouseEffects, getPollAdjustmentSummary } from './houseEffectAdjustment';
 export { calculateHouseEffects } from './houseEffects';
-export { calculateCurrentAverage, calculatePollingAverages } from './pollingAverages';
+export { calculateCurrentAverage, calculatePollingAverages, type WeightingMethod } from './pollingAverages';
 // Type exports
 export type {
     AdjustedPoll,

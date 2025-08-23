@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings } from '../index';
 import { fetchSeatProjections, calculateBlocAnalysis } from '../pollOfPollsApi';
 import { generateCombinedChart } from '../combinedVisualization';
+import type { WeightingMethod } from '../pollingAverages';
 
 async function generateAll() {
     console.log('🇳🇴 Norske Stortingsvalg - Komplett Analyse');
@@ -11,6 +12,10 @@ async function generateAll() {
 
     // Get command line arguments
     const lookbackDays = parseInt(process.argv[2] || '14') || 14;
+    const weightingArg = process.argv[4] as WeightingMethod | undefined;
+    const weighting: WeightingMethod = weightingArg && ['linear', 'exponential', 'quadratic'].includes(weightingArg) 
+        ? weightingArg 
+        : 'none';
     
     try {
         // Load and analyze data
@@ -25,7 +30,10 @@ async function generateAll() {
         }
 
         // Get current standings
-        const standings = getCurrentStandings(analysis.adjustedPolls, lookbackDays, { sortByPercentage: false });
+        const standings = getCurrentStandings(analysis.adjustedPolls, lookbackDays, { 
+            sortByPercentage: false,
+            weighting
+        });
         
         if (!standings) {
             console.log('❌ Ingen måledata tilgjengelig for angitt tidsramme');
@@ -58,6 +66,9 @@ async function generateAll() {
         }
 
         console.log(`📊 Genererer komplett analyse med ${lookbackDays}-dagers tilbakeblikk...`);
+        if (weighting !== 'none') {
+            console.log(`⚖️  Vekting: ${weighting} (nyere målinger gis mer vekt)`);
+        }
         console.log(`🌐 Bruker Poll of Polls (www.pollofpolls.no) for mandatberegning`);
         console.log(`💾 Lagrer til: ${outputPath}\n`);
 
@@ -99,22 +110,26 @@ async function generateAll() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Stortingsvalg - Komplett Analyse');
-    console.log('Bruk: npx tsx src/scripts/generate_all.ts [tilbakeblikk_dager] [output_fil]');
+    console.log('Bruk: npx tsx src/scripts/generate_all.ts [tilbakeblikk_dager] [output_fil] [vekting]');
     console.log('');
     console.log('Genererer komplett analyse med både meningsmålinger og blokk-fordeling:');
     console.log('• Kombinerer polling-diagram og mandatfordeling');
     console.log('• Viser rød-grønn vs borgerlig blokk visuelt');
     console.log('• Bruker Poll of Polls for offisiell mandatberegning');
     console.log('• Lagrer som PNG-fil');
+    console.log('• Valgfri vekting av nyere målinger');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx src/scripts/generate_all.ts                    # 14-dagers tilbakeblikk');
-    console.log('  npx tsx src/scripts/generate_all.ts 7                  # 7-dagers tilbakeblikk');
-    console.log('  npx tsx src/scripts/generate_all.ts 14 analysis.png    # Custom filnavn');
+    console.log('  npx tsx src/scripts/generate_all.ts                         # 14-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_all.ts 7                       # 7-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_all.ts 14 analysis.png         # Custom filnavn');
+    console.log('  npx tsx src/scripts/generate_all.ts 14 "" exponential       # Eksponentiell vekting');
+    console.log('  npx tsx src/scripts/generate_all.ts 21 analysis.png linear  # Linear vekting');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');
-    console.log('  output_fil          Filnavn for PNG (standard: auto-generert)');
+    console.log('  output_fil          Filnavn for PNG (standard: auto-generert med polldato)');
+    console.log('  vekting            Vektingsmetode: none (standard), linear, exponential, quadratic');
     process.exit(0);
 }
 
