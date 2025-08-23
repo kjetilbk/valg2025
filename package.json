@@ -1,0 +1,26 @@
+{
+  "name": "valg2025",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "clean-data": "tsx src/cleanData.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.14.0",
+  "dependencies": {
+    "biome": "^0.3.3",
+    "papaparse": "^5.5.3",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.3.16",
+    "@vitest/ui": "^3.2.4",
+    "vitest": "^3.2.4"
+  }
+}
