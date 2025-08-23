@@ -26,10 +26,26 @@ export interface HouseEffects {
     [house: string]: HouseEffect;
 }
 
+export interface AdjustedPoll extends ParsedPoll {
+    originalParties: Record<PartyName, number>;
+    adjustments: Partial<Record<PartyName, number>>;
+}
+
+export interface PollingAverage {
+    date: string;
+    parsedDate: Date;
+    timeSpan: string;
+    pollCount: number;
+    parties: Record<PartyName, number>;
+    houses: string[];
+}
+
 export interface AnalysisResult {
     polls: ParsedPoll[];
     monthlyBenchmarks: MonthlyBenchmarks;
     houseEffects: HouseEffects;
+    adjustedPolls?: AdjustedPoll[];
+    averages?: PollingAverage[];
     summary: {
         totalPolls: number;
         dateRange: {
