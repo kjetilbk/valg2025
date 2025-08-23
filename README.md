@@ -43,3 +43,7 @@ pnpm chart 14      # 14-dagers gjennomsnitt
 # Se hvilke institutter som har skjevheter
 pnpm house-effects
 ```
+
+## Datakilder
+
+Måledata og mandatberegninger kommer fra **Poll of Polls** (pollofpolls.no)
