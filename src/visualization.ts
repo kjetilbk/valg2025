@@ -152,16 +152,16 @@ export function getAdjustmentComparison(
  * Norwegian party colors for consistent visualization
  */
 const PARTY_COLORS: Record<string, string> = {
-    Ap: '#E61E2B', // Red - Arbeiderpartiet
-    Høyre: '#0057B7', // Blue - Conservative
-    Frp: '#003580', // Dark Blue - Progress Party
-    SV: '#FF6B35', // Orange - Socialist Left
-    Sp: '#00A64F', // Green - Centre Party
-    KrF: '#FFD700', // Yellow - Christian Democrats
-    Venstre: '#90EE90', // Light Green - Liberal Party
-    MDG: '#228B22', // Forest Green - Green Party
-    Rødt: '#8B0000', // Dark Red - Red Party
-    Andre: '#808080', // Gray - Others
+    Ap: '#e30613', // Red
+    Høyre: '#0065f1', // Blue
+    Frp: '#006699', // Dark blue
+    SV: '#bf2419', // Dark red
+    Sp: '#00841b', // Green
+    KrF: '#f4a127', // Orange/Yellow
+    Venstre: '#009639', // Green
+    MDG: '#4d9d2a', // Green
+    Rødt: '#a40000', // Dark red
+    Andre: '#808080', // Gray
 };
 
 /**
