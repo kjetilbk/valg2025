@@ -73,11 +73,11 @@ export const PARTY_NAMES: PartyName[] = [
     'Ap',
     'Sp',
     'MDG',
+    'Andre',
     'KrF',
     'Venstre',
     'Høyre',
     'Frp',
-    'Andre',
 ];
 
 export interface CurrentStandings {

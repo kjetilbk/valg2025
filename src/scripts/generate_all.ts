@@ -11,7 +11,6 @@ async function generateAll() {
 
     // Get command line arguments
     const lookbackDays = parseInt(process.argv[2] || '14') || 14;
-    const outputPath = process.argv[3] || `charts/complete-${new Date().toISOString().split('T')[0]}-${lookbackDays}day.png`;
     
     try {
         // Load and analyze data
@@ -31,6 +30,31 @@ async function generateAll() {
         if (!standings) {
             console.log('❌ Ingen måledata tilgjengelig for angitt tidsramme');
             process.exit(1);
+        }
+
+        // Generate filename if not provided, using date from latest poll
+        let outputPath = process.argv[3];
+        if (!outputPath) {
+            // Format the date from the standings (e.g., "22/8-2025" -> "2025-08-22")
+            const dateStr = standings.date;
+            const dateParts = dateStr.split('-');
+            const dayMonth = dateParts[0];
+            const year = dateParts[1];
+            
+            if (!dayMonth || !year) {
+                throw new Error(`Invalid date format: ${dateStr}`);
+            }
+            
+            const dayMonthParts = dayMonth.split('/');
+            const day = dayMonthParts[0];
+            const month = dayMonthParts[1];
+            
+            if (!day || !month) {
+                throw new Error(`Invalid day/month format: ${dayMonth}`);
+            }
+            
+            const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            outputPath = `charts/complete-${formattedDate}-${lookbackDays}day.png`;
         }
 
         console.log(`📊 Genererer komplett analyse med ${lookbackDays}-dagers tilbakeblikk...`);

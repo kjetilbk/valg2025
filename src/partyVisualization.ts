@@ -49,8 +49,8 @@ export function drawPartySeats(
     const rectWidth = width;
     const rectHeight = height - 20; // Leave space for label
 
-    // Party order: Rødt, SV, Ap, Sp, MDG, KrF, Venstre, Høyre, Frp
-    const partyOrder = ['Rødt', 'SV', 'Ap', 'Sp', 'MDG', 'KrF', 'Venstre', 'Høyre', 'Frp'];
+    // Party order: Rødt, SV, Ap, Sp, MDG, Andre, KrF, Venstre, Høyre, Frp
+    const partyOrder = ['Rødt', 'SV', 'Ap', 'Sp', 'MDG', 'Andre', 'KrF', 'Venstre', 'Høyre', 'Frp'];
 
     // Get party data with seats > 0
     const partyData = partyOrder
@@ -118,11 +118,31 @@ export function drawPartySeats(
     ctx.stroke();
     ctx.setLineDash([]); // Reset line dash
 
+    // Calculate bloc seats
+    const redGreenParties = ['Rødt', 'SV', 'Ap', 'Sp', 'MDG'];
+    const conservativeParties = ['Høyre', 'Frp', 'KrF', 'Venstre'];
+    
+    const redGreenSeats = partyData
+        .filter(p => redGreenParties.includes(p.party))
+        .reduce((sum, p) => sum + p.seats, 0);
+    
+    const conservativeSeats = partyData
+        .filter(p => conservativeParties.includes(p.party))
+        .reduce((sum, p) => sum + p.seats, 0);
+        
+    const othersSeats = partyData
+        .filter(p => p.party === 'Andre')
+        .reduce((sum, p) => sum + p.seats, 0);
+
     // Add label below the rectangle
     ctx.fillStyle = '#000000';
     ctx.font = '12px monospace';
     ctx.textAlign = 'left';
 
     const labelY = y + rectHeight + 15;
-    ctx.fillText(`Mandatfordeling i Stortinget | Flertall: ${majority} mandater`, x, labelY);
+    const comparison = redGreenSeats > conservativeSeats ? '>' : '<';
+    const labelText = othersSeats > 0 
+        ? `Rød-grønn: ${redGreenSeats} ${comparison} Borgerlig: ${conservativeSeats} | Andre: ${othersSeats}`
+        : `Rød-grønn: ${redGreenSeats} ${comparison} Borgerlig: ${conservativeSeats}`;
+    ctx.fillText(labelText, x, labelY);
 }
