@@ -5,7 +5,6 @@
     "main": "index.js",
     "scripts": {
         "test": "vitest",
-        "test:ui": "vitest --ui",
         "test:run": "vitest run",
         "clean-data": "tsx src/cleanData.ts",
         "chart": "tsx src/scripts/generate_chart.ts",
@@ -31,7 +30,6 @@
     "devDependencies": {
         "@biomejs/biome": "^2.2.0",
         "@types/papaparse": "^5.3.16",
-        "@vitest/ui": "^3.2.4",
         "tsx": "^4.20.4",
         "vitest": "^3.2.4"
     }
