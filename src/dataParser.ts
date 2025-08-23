@@ -1,12 +1,16 @@
 import * as Papa from 'papaparse';
-import type { ParsedPoll, PartyName } from '../types';
-import { PARTY_NAMES } from '../types';
+import type { ParsedPoll, PartyName } from './types';
+import { PARTY_NAMES } from './types';
 
- 
 /**
  * Parse Norwegian date format (DD/M-YYYY) to Date object
  */
-function parseNorwegianDate(dateString: string): { parsedDate: Date; day: number; month: number; year: number } {
+function parseNorwegianDate(dateString: string): {
+    parsedDate: Date;
+    day: number;
+    month: number;
+    year: number;
+} {
     const match = dateString.match(/(\d{1,2})\/(\d{1,2})-(\d{4})/)!;
     const [, dayStr, monthStr, yearStr] = match;
     const day = parseInt(dayStr!, 10);
@@ -17,7 +21,7 @@ function parseNorwegianDate(dateString: string): { parsedDate: Date; day: number
         parsedDate: new Date(year, month - 1, day), // JS Date months are 0-indexed
         day,
         month,
-        year
+        year,
     };
 }
 
@@ -56,7 +60,7 @@ function parseRow(row: Record<string, string>): ParsedPoll {
         month: dateInfo.month,
         year: dateInfo.year,
         day: dateInfo.day,
-        parties
+        parties,
     };
 }
 
@@ -65,16 +69,16 @@ function parseRow(row: Record<string, string>): ParsedPoll {
  */
 export function parseNorwegianPolls(csvContent: string): ParsedPoll[] {
     const lines = csvContent.split('\n');
-    const dataStartIndex = lines.findIndex(line => line.includes('Måling'));
+    const dataStartIndex = lines.findIndex((line) => line.includes('Måling'));
 
     const dataLines = lines.slice(dataStartIndex).join('\n');
     const parseResult = Papa.parse<Record<string, string>>(dataLines, {
         header: true,
         delimiter: ';',
-        skipEmptyLines: true
+        skipEmptyLines: true,
     });
 
-    const polls = parseResult.data.map(row => parseRow(row!));
+    const polls = parseResult.data.map((row) => parseRow(row!));
     polls.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
     return polls;
 }

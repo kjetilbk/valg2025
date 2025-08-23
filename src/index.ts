@@ -1,19 +1,27 @@
 // Main exports
 export { analyzeNorwegianPolls } from './analysis';
 export { parseNorwegianPolls } from './dataParser';
-export { calculateHouseEffects } from './houseEffects';
 export { applyHouseEffects, getPollAdjustmentSummary } from './houseEffectAdjustment';
-export { calculatePollingAverages, calculateCurrentAverage } from './pollingAverages';
-
+export { calculateHouseEffects } from './houseEffects';
+export { calculateCurrentAverage, calculatePollingAverages } from './pollingAverages';
 // Type exports
 export type {
-    PartyName,
-    ParsedPoll,
     AdjustedPoll,
-    PollingAverage,
-    MonthlyBenchmarks,
+    AnalysisResult,
     HouseEffects,
-    AnalysisResult
-} from '../types';
+    MonthlyBenchmarks,
+    ParsedPoll,
+    PartyName,
+    PollingAverage,
+} from './types';
+export { PARTY_NAMES } from './types';
 
-export { PARTY_NAMES } from '../types';
+export type { CurrentStandings } from './visualization';
+export {
+    generateStandingsBarChart,
+    generateStandingsImage,
+    generateStandingsSummary,
+    getAdjustmentComparison,
+    getCurrentStandings,
+    saveStandingsChart,
+} from './visualization';

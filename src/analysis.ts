@@ -1,38 +1,38 @@
 import { parseNorwegianPolls } from './dataParser';
-import { calculateHouseEffects } from './houseEffects';
 import { applyHouseEffects } from './houseEffectAdjustment';
-import { calculatePollingAverages, calculateCurrentAverage } from './pollingAverages';
-import type { AnalysisResult } from '../types';
+import { calculateHouseEffects } from './houseEffects';
+import { calculateCurrentAverage, calculatePollingAverages } from './pollingAverages';
+import type { AnalysisResult } from './types';
 
 export function analyzeNorwegianPolls(
-    csvContent: string, 
-    options: { 
+    csvContent: string,
+    options: {
         includeAdjustments?: boolean;
         includeAverages?: boolean;
         averageTimeSpan?: number;
         averageStepDays?: number;
     } = {}
 ): AnalysisResult {
-    const { 
-        includeAdjustments = false, 
+    const {
+        includeAdjustments = false,
         includeAverages = false,
         averageTimeSpan = 14,
-        averageStepDays = 7
+        averageStepDays = 7,
     } = options;
-    
+
     const polls = parseNorwegianPolls(csvContent);
     const houseEffects = calculateHouseEffects(polls);
-    
-    let adjustedPolls = undefined;
-    let averages = undefined;
-    
+
+    let adjustedPolls;
+    let averages;
+
     if (includeAdjustments || includeAverages) {
         adjustedPolls = applyHouseEffects(polls, houseEffects);
-        
+
         if (includeAverages) {
             averages = calculatePollingAverages(adjustedPolls, {
                 timeSpanDays: averageTimeSpan,
-                stepDays: averageStepDays
+                stepDays: averageStepDays,
             });
         }
     }
@@ -47,10 +47,10 @@ export function analyzeNorwegianPolls(
             totalPolls: polls.length,
             dateRange: {
                 earliest: polls[0]!.date,
-                latest: polls[polls.length - 1]!.date
+                latest: polls[polls.length - 1]!.date,
             },
-            pollsters: Array.from(new Set(polls.map(p => p.house))).sort(),
-            months: Array.from(new Set(polls.map(p => p.month))).sort()
-        }
+            pollsters: Array.from(new Set(polls.map((p) => p.house))).sort(),
+            months: Array.from(new Set(polls.map((p) => p.month))).sort(),
+        },
     };
 }

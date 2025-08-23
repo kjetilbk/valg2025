@@ -20,6 +20,6 @@ writeFileSync(csvFile, cleanedContent, 'utf8');
 
 console.log('✅ Fixed encoding issues:');
 console.log('   - M�ling → Måling');
-console.log('   - H�yre → Høyre'); 
+console.log('   - H�yre → Høyre');
 console.log('   - R�dt → Rødt');
 console.log('📁 File overwritten successfully!');

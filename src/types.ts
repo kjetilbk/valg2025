@@ -1,4 +1,14 @@
-export type PartyName = 'Ap' | 'Høyre' | 'Frp' | 'SV' | 'Sp' | 'KrF' | 'Venstre' | 'MDG' | 'Rødt' | 'Andre';
+export type PartyName =
+    | 'Ap'
+    | 'Høyre'
+    | 'Frp'
+    | 'SV'
+    | 'Sp'
+    | 'KrF'
+    | 'Venstre'
+    | 'MDG'
+    | 'Rødt'
+    | 'Andre';
 
 export interface ParsedPoll {
     house: string;
@@ -57,4 +67,15 @@ export interface AnalysisResult {
     };
 }
 
-export const PARTY_NAMES: PartyName[] = ['Ap', 'Høyre', 'Frp', 'SV', 'Sp', 'KrF', 'Venstre', 'MDG', 'Rødt', 'Andre'];
+export const PARTY_NAMES: PartyName[] = [
+    'Ap',
+    'Høyre',
+    'Frp',
+    'SV',
+    'Sp',
+    'KrF',
+    'Venstre',
+    'MDG',
+    'Rødt',
+    'Andre',
+];

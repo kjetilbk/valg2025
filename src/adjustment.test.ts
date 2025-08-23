@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { applyHouseEffects, getPollAdjustmentSummary } from './houseEffectAdjustment';
-import { calculatePollingAverages, calculateCurrentAverage } from './pollingAverages';
-import type { ParsedPoll, HouseEffects, AdjustedPoll } from '../types';
+import { calculateCurrentAverage, calculatePollingAverages } from './pollingAverages';
+import type { AdjustedPoll, HouseEffects, ParsedPoll } from './types';
 
 describe('House Effect Adjustment', () => {
     const mockPolls: ParsedPoll[] = [
@@ -12,7 +12,18 @@ describe('House Effect Adjustment', () => {
             month: 8,
             year: 2025,
             day: 1,
-            parties: { Ap: 25, Høyre: 15, Frp: 20, SV: 6, Sp: 7, KrF: 5, Venstre: 4, MDG: 4, Rødt: 6, Andre: 8 }
+            parties: {
+                Ap: 25,
+                Høyre: 15,
+                Frp: 20,
+                SV: 6,
+                Sp: 7,
+                KrF: 5,
+                Venstre: 4,
+                MDG: 4,
+                Rødt: 6,
+                Andre: 8,
+            },
         },
         {
             house: 'House2',
@@ -21,8 +32,19 @@ describe('House Effect Adjustment', () => {
             month: 8,
             year: 2025,
             day: 2,
-            parties: { Ap: 23, Høyre: 17, Frp: 18, SV: 8, Sp: 5, KrF: 3, Venstre: 6, MDG: 6, Rødt: 4, Andre: 10 }
-        }
+            parties: {
+                Ap: 23,
+                Høyre: 17,
+                Frp: 18,
+                SV: 8,
+                Sp: 5,
+                KrF: 3,
+                Venstre: 6,
+                MDG: 6,
+                Rødt: 4,
+                Andre: 10,
+            },
+        },
     ];
 
     const mockHouseEffects: HouseEffects = {
@@ -30,13 +52,13 @@ describe('House Effect Adjustment', () => {
             pollCount: 1,
             Ap: 2, // House1 overestimates Ap by 2 points
             Høyre: -1, // House1 underestimates Høyre by 1 point
-            Frp: 0.5
+            Frp: 0.5,
         },
         House2: {
             pollCount: 1,
             Ap: -1, // House2 underestimates Ap by 1 point
-            Frp: -2
-        }
+            Frp: -2,
+        },
     };
 
     describe('applyHouseEffects', () => {
@@ -68,12 +90,12 @@ describe('House Effect Adjustment', () => {
             const pollsWithUnknownHouse: ParsedPoll[] = [
                 {
                     ...mockPolls[0]!,
-                    house: 'UnknownHouse'
-                }
+                    house: 'UnknownHouse',
+                },
             ];
 
             const adjustedPolls = applyHouseEffects(pollsWithUnknownHouse, mockHouseEffects);
-            
+
             expect(adjustedPolls).toHaveLength(1);
             expect(adjustedPolls[0]!.parties.Ap).toBe(25); // No adjustment
             expect(adjustedPolls[0]!.adjustments).toEqual({});
@@ -90,7 +112,7 @@ describe('House Effect Adjustment', () => {
             expect(summary.adjustmentCount).toBe(3); // Ap, Høyre, Frp
             expect(summary.largestAdjustment).toEqual({
                 party: 'Ap',
-                adjustment: -2
+                adjustment: -2,
             });
         });
     });
@@ -104,9 +126,31 @@ describe('Polling Averages', () => {
         month: 8,
         year: 2025,
         day: 1,
-        parties: { Ap: apValue, Høyre: 15, Frp: 20, SV: 6, Sp: 7, KrF: 5, Venstre: 4, MDG: 4, Rødt: 6, Andre: 8 },
-        originalParties: { Ap: apValue + 1, Høyre: 15, Frp: 20, SV: 6, Sp: 7, KrF: 5, Venstre: 4, MDG: 4, Rødt: 6, Andre: 8 },
-        adjustments: { Ap: -1 }
+        parties: {
+            Ap: apValue,
+            Høyre: 15,
+            Frp: 20,
+            SV: 6,
+            Sp: 7,
+            KrF: 5,
+            Venstre: 4,
+            MDG: 4,
+            Rødt: 6,
+            Andre: 8,
+        },
+        originalParties: {
+            Ap: apValue + 1,
+            Høyre: 15,
+            Frp: 20,
+            SV: 6,
+            Sp: 7,
+            KrF: 5,
+            Venstre: 4,
+            MDG: 4,
+            Rødt: 6,
+            Andre: 8,
+        },
+        adjustments: { Ap: -1 },
     });
 
     describe('calculateCurrentAverage', () => {
@@ -114,7 +158,7 @@ describe('Polling Averages', () => {
             const adjustedPolls: AdjustedPoll[] = [
                 createAdjustedPoll('House1', '2025-08-01', 25),
                 createAdjustedPoll('House2', '2025-08-02', 27),
-                createAdjustedPoll('House3', '2025-08-03', 23)
+                createAdjustedPoll('House3', '2025-08-03', 23),
             ];
 
             const average = calculateCurrentAverage(adjustedPolls, 14);
@@ -137,12 +181,12 @@ describe('Polling Averages', () => {
             const adjustedPolls: AdjustedPoll[] = [
                 createAdjustedPoll('House1', '2025-08-01', 25),
                 createAdjustedPoll('House2', '2025-08-08', 27),
-                createAdjustedPoll('House3', '2025-08-15', 23)
+                createAdjustedPoll('House3', '2025-08-15', 23),
             ];
 
             const averages = calculatePollingAverages(adjustedPolls, {
                 timeSpanDays: 14,
-                stepDays: 7
+                stepDays: 7,
             });
 
             expect(averages.length).toBeGreaterThan(0);
