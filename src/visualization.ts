@@ -1,5 +1,5 @@
 import { calculateCurrentAverage } from './pollingAverages';
-import type { AdjustedPoll, PollingAverage } from './types';
+import type { AdjustedPoll } from './types';
 import { PARTY_NAMES } from './types';
 
 // Chart.js imports for image generation

@@ -9,6 +9,7 @@
     "test:run": "vitest run",
     "clean-data": "tsx src/cleanData.ts",
     "chart": "tsx generate_chart.ts",
+    "house-effects": "tsx house_effects.ts",
     "lint": "biome lint src",
     "format": "biome format --write src",
     "check": "biome check --write src"
