@@ -12,6 +12,7 @@
     "house-effects": "tsx house_effects.ts",
     "seats": "tsx generate_seats.ts",
     "blocs": "tsx generate_blocs.ts",
+    "all": "tsx generate_all.ts",
     "lint": "biome lint src",
     "format": "biome format --write src",
     "check": "biome check --write src"
