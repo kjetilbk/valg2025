@@ -1,38 +1,38 @@
 {
-  "name": "valg2025",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
-    "clean-data": "tsx src/cleanData.ts",
-    "chart": "tsx generate_chart.ts",
-    "house-effects": "tsx house_effects.ts",
-    "seats": "tsx generate_seats.ts",
-    "blocs": "tsx generate_blocs.ts",
-    "all": "tsx generate_all.ts",
-    "lint": "biome lint src",
-    "format": "biome format --write src",
-    "check": "biome check --write src"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.14.0",
-  "dependencies": {
-    "@napi-rs/canvas": "^0.1.77",
-    "chart.js": "^4.5.0",
-    "chartjs-plugin-datalabels": "^2.2.0",
-    "papaparse": "^5.5.3",
-    "typescript": "^5.9.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
-    "@types/papaparse": "^5.3.16",
-    "@vitest/ui": "^3.2.4",
-    "tsx": "^4.20.4",
-    "vitest": "^3.2.4"
-  }
+    "name": "valg2025",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:run": "vitest run",
+        "clean-data": "tsx src/cleanData.ts",
+        "chart": "tsx generate_chart.ts",
+        "house-effects": "tsx house_effects.ts",
+        "seats": "tsx generate_seats.ts",
+        "blocs": "tsx generate_blocs.ts",
+        "all": "tsx generate_all.ts",
+        "lint": "biome lint src",
+        "format": "biome format --write src",
+        "check": "biome lint src && biome check src && biome format src && tsc"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.14.0",
+    "dependencies": {
+        "@napi-rs/canvas": "^0.1.77",
+        "chart.js": "^4.5.0",
+        "chartjs-plugin-datalabels": "^2.2.0",
+        "papaparse": "^5.5.3",
+        "typescript": "^5.9.2"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.2.0",
+        "@types/papaparse": "^5.3.16",
+        "@vitest/ui": "^3.2.4",
+        "tsx": "^4.20.4",
+        "vitest": "^3.2.4"
+    }
 }

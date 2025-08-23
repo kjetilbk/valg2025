@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
     type AnalysisResult,
@@ -249,7 +249,7 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
             let csvContent: string;
             try {
                 csvContent = readFileSync('./polls.csv', 'utf8');
-            } catch (error) {
+            } catch {
                 console.warn('polls.csv not found, skipping real data test');
                 return;
             }

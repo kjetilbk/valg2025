@@ -1,31 +1,20 @@
 import { calculateCurrentAverage } from './pollingAverages';
-import type { AdjustedPoll } from './types';
+import type { AdjustedPoll, CurrentStandings } from './types';
 import { PARTY_NAMES } from './types';
+import { drawWatermark } from './watermark';
 
 // Chart.js imports for image generation
-let Canvas: any;
-let ChartJS: any;
-let ChartDataLabels: any;
+let Canvas: typeof import('@napi-rs/canvas') | undefined;
+let ChartJS: typeof import('chart.js') | undefined;
+let ChartDataLabels: typeof import('chartjs-plugin-datalabels') | undefined;
 
 // Lazy load Chart.js dependencies to avoid issues if not installed
 try {
     Canvas = require('@napi-rs/canvas');
     ChartJS = require('chart.js');
     ChartDataLabels = require('chartjs-plugin-datalabels');
-} catch (error) {
+} catch {
     // Chart.js not available, image generation will be disabled
-}
-
-export interface CurrentStandings {
-    date: string;
-    lookbackDays: number;
-    pollCount: number;
-    houses: string[];
-    standings: Array<{
-        party: string;
-        percentage: number;
-        displayName: string;
-    }>;
 }
 
 /**
@@ -74,11 +63,9 @@ export function generateStandingsBarChart(standings: CurrentStandings): string {
     const maxPercentage = Math.max(...parties.map((p) => p.percentage));
     const barWidth = 50; // Maximum bar width in characters
 
-    let chart = `Norske Meningsmålinger - Nåværende Stilling\n`;
-    chart += `${'='.repeat(50)}\n`;
+    let chart = `Gjennomsnitt av meningsmålinger, house effect-justert\n`;
     chart += `Per: ${date} (${lookbackDays} dagers tilbakeblikk)\n`;
     chart += `Basert på: ${pollCount} målinger fra ${houses.length} institutter (${houses.join(', ')})\n`;
-    chart += `House effects: JUSTERT\n\n`;
 
     for (const party of parties) {
         const percentage = party.percentage;
@@ -112,7 +99,7 @@ export function generateStandingsSummary(standings: CurrentStandings): string {
  * Get comparison between raw and adjusted standings
  */
 export function getAdjustmentComparison(
-    rawPolls: any[],
+    rawPolls: AdjustedPoll[],
     adjustedPolls: AdjustedPoll[],
     lookbackDays: number = 14
 ): {
@@ -196,7 +183,7 @@ export async function generateStandingsImage(
         return null;
     }
 
-    const { width = 800, height = 600, backgroundColor = '#ffffff', title } = options;
+    const { width = 800, height = 600, title } = options;
 
     const { standings: parties, lookbackDays, pollCount, houses, date } = standings;
 
@@ -208,7 +195,7 @@ export async function generateStandingsImage(
         const ctx = canvas.getContext('2d');
 
         // Register Chart.js components and configure canvas
-        ChartJS.Chart.register(
+        const components = [
             ChartJS.CategoryScale,
             ChartJS.LinearScale,
             ChartJS.BarElement,
@@ -216,14 +203,20 @@ export async function generateStandingsImage(
             ChartJS.Title,
             ChartJS.Tooltip,
             ChartJS.Legend,
-            ChartDataLabels
-        );
+        ];
 
-        const chartTitle = title || `Norske Meningsmålinger - Nåværende Stilling (${date})`;
-        const subtitle = `${lookbackDays}-dagers tilbakeblikk • ${pollCount} målinger fra ${houses.length} institutter • House effects justert`;
+        if (ChartDataLabels) {
+            // biome-ignore lint/suspicious/noExplicitAny: ChartDataLabels plugin has complex typing incompatibility
+            components.push(ChartDataLabels as any);
+        }
+
+        ChartJS.Chart.register(...components);
+
+        const chartTitle = title || `Gjennomsnitt av meningsmålinger, house effect-justert`;
+        const subtitle = `Per: ${date} (${lookbackDays} dagers tilbakeblikk)\nBasert på: ${pollCount} målinger fra ${houses.length} institutter (${houses.join(', ')})`;
 
         const configuration = {
-            type: 'bar',
+            type: 'bar' as const,
             data: {
                 labels: parties.map((p) => p.displayName),
                 datasets: [
@@ -300,7 +293,11 @@ export async function generateStandingsImage(
         };
 
         // Create Chart.js chart with the canvas
-        const chart = new ChartJS.Chart(ctx, configuration);
+        // biome-ignore lint/suspicious/noExplicitAny: @napi-rs/canvas context has different type than browser CanvasRenderingContext2D
+        const chart = new ChartJS.Chart(ctx as any, configuration as any);
+
+        // Add watermark to standalone chart
+        drawWatermark(ctx, width, height);
 
         // Convert to buffer
         const buffer = canvas.toBuffer('image/png');
@@ -316,6 +313,133 @@ export async function generateStandingsImage(
 }
 
 /**
+ * Draw standings chart to an existing canvas context
+ * This allows for composition with other visualizations
+ */
+export async function drawStandingsChart(
+    // biome-ignore lint/suspicious/noExplicitAny: Canvas context from @napi-rs/canvas has different type than browser CanvasRenderingContext2D
+    ctx: any,
+    standings: CurrentStandings,
+    width: number,
+    height: number,
+    options: {
+        title?: string;
+        x?: number;
+        y?: number;
+    } = {}
+): Promise<void> {
+    if (!Canvas || !ChartJS) {
+        throw new Error('Chart.js or @napi-rs/canvas not available');
+    }
+
+    const { title, x = 0, y = 0 } = options;
+    const { standings: parties, lookbackDays, pollCount, houses, date } = standings;
+
+    if (parties.length === 0) return;
+
+    // Create temporary canvas for chart generation
+    const chartCanvas = Canvas.createCanvas(width, height);
+    const chartCtx = chartCanvas.getContext('2d');
+
+    // Register Chart.js components
+    const components = [
+        ChartJS.CategoryScale,
+        ChartJS.LinearScale,
+        ChartJS.BarElement,
+        ChartJS.BarController,
+        ChartJS.Title,
+        ChartJS.Tooltip,
+        ChartJS.Legend,
+    ];
+
+    if (ChartDataLabels) {
+        // biome-ignore lint/suspicious/noExplicitAny: ChartDataLabels plugin has complex typing incompatibility
+        components.push(ChartDataLabels as any);
+    }
+
+    ChartJS.Chart.register(...components);
+
+    const chartTitle = title || `Gjennomsnitt av meningsmålinger, house effect-justert`;
+    const subtitle = `Per: ${date} (${lookbackDays} dagers tilbakeblikk)\nBasert på: ${pollCount} målinger fra ${houses.length} institutter (${houses.join(', ')})`;
+
+    const configuration = {
+        type: 'bar' as const,
+        data: {
+            labels: parties.map((p) => p.displayName),
+            datasets: [
+                {
+                    label: 'Oppslutning (%)',
+                    data: parties.map((p) => p.percentage),
+                    backgroundColor: parties.map((p) => PARTY_COLORS[p.party] || '#808080'),
+                    borderColor: parties.map((p) => PARTY_COLORS[p.party] || '#808080'),
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            responsive: false,
+            animation: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: [chartTitle, subtitle],
+                    font: {
+                        size: 16,
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 30,
+                    },
+                },
+                legend: {
+                    display: false,
+                },
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: 'black',
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                    },
+                    formatter: (value: number) => `${value.toFixed(1)}%`,
+                },
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Partier',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(
+                        Math.ceil(Math.max(...parties.map((p) => p.percentage)) / 5) * 5,
+                        30
+                    ),
+                    title: {
+                        display: true,
+                        text: 'Oppslutning (%)',
+                    },
+                },
+            },
+        },
+    };
+
+    // Create and render chart
+    // biome-ignore lint/suspicious/noExplicitAny: @napi-rs/canvas context has different type than browser CanvasRenderingContext2D
+    const chart = new ChartJS.Chart(chartCtx as any, configuration as any);
+
+    // Draw the chart canvas onto the main context
+    ctx.drawImage(chartCanvas, x, y);
+
+    // Cleanup
+    chart.destroy();
+}
+
+/**
  * Save standings chart as PNG file
  */
 export async function saveStandingsChart(
@@ -328,7 +452,7 @@ export async function saveStandingsChart(
     if (!imageBuffer) return false;
 
     try {
-        const fs = require('fs');
+        const fs = require('node:fs');
         fs.writeFileSync(filename, imageBuffer);
         return true;
     } catch (error) {

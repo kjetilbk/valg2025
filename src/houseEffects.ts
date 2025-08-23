@@ -44,7 +44,7 @@ function calculateBenchmarkForPoll(
     for (const party of PARTY_NAMES) {
         const values = windowPolls
             .map((poll) => poll.parties[party])
-            .filter((val): val is number => val !== undefined && !isNaN(val));
+            .filter((val): val is number => val !== undefined && !Number.isNaN(val));
 
         if (values.length > 0) {
             benchmark[party] = values.reduce((sum, val) => sum + val, 0) / values.length;

@@ -3,14 +3,14 @@
 import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings } from './src/index';
 import { fetchSeatProjections } from './src/pollOfPollsApi';
-import { generateSeatProjectionChart, generateSeatSummary } from './src/seatVisualization';
+import { generateSeatProjectionChart } from './src/seatVisualization';
 
 async function generateSeats() {
     console.log('🇳🇴 Norske Stortingsvalg - Mandatprognose');
     console.log('========================================\n');
 
     // Get command line arguments for lookback days
-    const lookbackDays = parseInt(process.argv[2]) || 14;
+    const lookbackDays = parseInt(process.argv[2] || '14', 10) || 14;
     
     try {
         // Load and analyze data

@@ -10,7 +10,7 @@ async function generateAll() {
     console.log('==========================================\n');
 
     // Get command line arguments
-    const lookbackDays = parseInt(process.argv[2]) || 14;
+    const lookbackDays = parseInt(process.argv[2] || '14') || 14;
     const outputPath = process.argv[3] || `charts/complete-${new Date().toISOString().split('T')[0]}-${lookbackDays}day.png`;
     
     try {
@@ -42,7 +42,7 @@ async function generateAll() {
         const blocAnalysis = calculateBlocAnalysis(seatProjection);
 
         // Generate combined chart
-        await generateCombinedChart(standings, blocAnalysis, outputPath);
+        await generateCombinedChart(standings, blocAnalysis, outputPath, seatProjection);
 
         console.log('✅ Komplett analyse generert!');
         console.log(`📁 Fil lagret: ${outputPath}`);

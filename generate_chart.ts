@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from './src/index';
 
 async function generateChart() {
@@ -8,7 +8,7 @@ async function generateChart() {
     console.log('===============================================\n');
 
     // Get command line arguments for lookback days
-    const lookbackDays = parseInt(process.argv[2]) || 14;
+    const lookbackDays = parseInt(process.argv[2] || '14', 10) || 14;
     
     try {
         // Load and analyze data first to get latest poll date
@@ -35,10 +35,23 @@ async function generateChart() {
         if (!filename) {
             // Format the date from the standings (e.g., "22/8-2025" -> "2025-08-22")
             const dateStr = standings.date;
-            const [dayMonth, year] = dateStr.split('-');
-            const [day, month] = dayMonth.split('/');
-            const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            const dateParts = dateStr.split('-');
+            const dayMonth = dateParts[0];
+            const year = dateParts[1];
             
+            if (!dayMonth || !year) {
+                throw new Error(`Invalid date format: ${dateStr}`);
+            }
+            
+            const dayMonthParts = dayMonth.split('/');
+            const day = dayMonthParts[0];
+            const month = dayMonthParts[1];
+            
+            if (!day || !month) {
+                throw new Error(`Invalid day/month format: ${dayMonth}`);
+            }
+            
+            const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
             filename = `charts/polling-${formattedDate}-${lookbackDays}day.png`;
         }
 

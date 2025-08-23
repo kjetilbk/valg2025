@@ -1,223 +1,45 @@
-# Norwegian Election Polling Analysis 2025 🇳🇴
+# Norske Meningsmålinger 2025 🇳🇴
 
-A comprehensive system for analyzing Norwegian election polling data with systematic bias correction and professional chart generation.
+Dette systemet analyserer norske meningsmålinger og korrigerer for systematiske skjevheter i måleinstituttene.
 
-## 🎯 Quick Start - Generate Charts
+## Hva gjør dette systemet?
 
-The most important feature of this repository is the **chart generation script**:
+Når måleinstitutter publiserer meningsmålinger, har mange av dem systematiske skjevheter - noen overestimerer eller underestimerer konsekvent enkelte partier. Dette kalles "house effects".
 
-```bash
-# Install dependencies
-pnpm install
+**For eksempel:**
+- Verian pleier å måle Ap 1,9 prosentpoeng høyere enn gjennomsnittet
+- Norfakta underestimerer ofte Frp med 1,5 prosentpoeng
+- InFact har en tendens til å underestimere både Ap og Høyre
 
-# Generate charts using pnpm scripts (recommended)
-pnpm chart                           # Default 14-day chart (auto-saved to charts/)
-pnpm chart 7                         # Weekly chart
-pnpm chart 21 charts/monthly.png     # Custom chart with path
-pnpm chart 14 charts/latest.png      # Organized in charts/ folder
+## Hvordan løser vi dette?
 
-# Analyze house effects (great for sharing)
-pnpm house-effects                   # Show systematic polling biases
+1. **Vi samler inn alle meningsmålinger** fra de store instituttene (InFact, Norfakta, Norstat, Opinion, Respons, Verian)
 
-# Alternative: Direct script usage
-npx tsx generate_chart.ts 7 weekly.png
+2. **Vi beregner house effects** ved å sammenligne hvert institutt med gjennomsnittet av alle andre målinger i samme tidsperiode
 
-# See all options
-pnpm chart --help
-pnpm house-effects --help
-```
+3. **Vi korrigerer målingene** ved å justere for disse systematiske skjevhetene
 
-## 📊 What You Get
+4. **Vi lager diagrammer** som viser den korrigerte situasjonen
 
-**Professional PNG Charts** with:
-- ✅ **Vertical bars** with party labels on bottom
-- ✅ **Percentage values** displayed on top of each bar
-- ✅ **Norwegian party colors** (Ap=red, Høyre=blue, etc.)
-- ✅ **House effect corrections** applied automatically
-- ✅ **Original party order** (political spectrum order)
-- ✅ **Configurable time windows** (7, 14, 21+ days)
+## Siste målinger
 
-**Plus ASCII charts** for terminal/console display and **house effects analysis** for understanding polling biases.
+### 7-dagers gjennomsnitt
+![7-dagers meningsmålinger](charts/complete-2025-08-23-7day.png)
 
-## 🏗️ Project Overview
+### 14-dagers gjennomsnitt  
+![14-dagers meningsmålinger](charts/complete-2025-08-23-14day.png)
 
-This system processes Norwegian polling data through three key phases:
-
-### Phase 1: Data Processing & House Effects
-- Parses Norwegian CSV polling data (semicolon-delimited, DD/M-YYYY dates)
-- Calculates **rolling window house effects** (±14-21 days) to detect systematic polling biases
-- Identifies which polling houses consistently over/underestimate each party
-
-### Phase 2: Bias Correction & Averaging  
-- **Applies house effect corrections** to remove systematic biases
-- Generates **time-series polling averages** with configurable windows
-- Maintains original data alongside corrected results for transparency
-
-### Phase 3: Professional Visualization
-- **ASCII charts** for terminal display
-- **PNG chart export** using Chart.js and @napi-rs/canvas
-- Norwegian party colors and professional formatting
-
-## 📈 Current Results (House-Adjusted)
-
-**14-day Average (as of 22/8-2025):**
-- **Ap (Labour):** 26.7% 
-- **Frp (Progress):** 21.8%
-- **Høyre (Conservative):** 15.1%
-- **SV (Socialist Left):** 6.1%
-- **Rødt (Red):** 6.2%
-- **Sp (Centre):** 6.1%
-
-*Based on 8 polls from 6 houses: InFact, Norfakta, Norstat, Opinion, Respons, Verian*
-
-## 🔧 Installation & Setup
+## Hvordan generere nye diagrammer
 
 ```bash
-# Clone repository
-git clone <repository-url>
-cd valg2025
+# Komplett analyse med både målinger og mandater
+pnpm all           # 14 dager (standard)
+pnpm all 7         # 7 dager
+pnpm all 21        # 21 dager
 
-# Install dependencies (uses pnpm)
-pnpm install
+# Bare meningsmålinger
+pnpm chart 14      # 14-dagers gjennomsnitt
 
-# Verify installation
-npx tsx generate_chart.ts --help
+# Se hvilke institutter som har skjevheter
+pnpm house-effects
 ```
-
-### System Requirements
-- Node.js 18+
-- pnpm package manager
-- macOS/Linux (for @napi-rs/canvas native dependencies)
-
-## 📁 Project Structure
-
-```
-valg2025/
-├── generate_chart.ts          # 🎯 MAIN SCRIPT - Chart generator
-├── house_effects.ts          # 📊 House effects analysis tool
-├── polls.csv                  # Raw Norwegian polling data
-├── charts/                   # Generated chart outputs
-├── src/
-│   ├── visualization.ts       # Chart generation & ASCII output
-│   ├── houseEffects.ts       # Rolling window bias calculation
-│   ├── houseEffectAdjustment.ts # Apply corrections to polls
-│   ├── pollingAverages.ts    # Time-series averages
-│   ├── dataParser.ts         # Norwegian CSV parsing
-│   ├── analysis.ts           # High-level orchestration
-│   ├── types.ts              # TypeScript definitions
-│   └── *.test.ts             # Comprehensive test suites
-├── CLAUDE.md                 # Development documentation
-├── biome.json                # Code quality configuration
-└── package.json              # Dependencies & scripts
-```
-
-## 🧪 Development & Testing
-
-```bash
-# Main commands
-pnpm chart [days] [filename]  # Generate polling charts (main feature)
-pnpm house-effects            # Analyze systematic polling biases
-
-# Development commands
-pnpm test:run                 # Run tests once
-pnpm test                     # Watch mode
-pnpm test:ui                  # Visual test runner
-pnpm check                    # Lint and format code
-npx tsc --noEmit             # Type checking
-
-# Utilities
-pnpm clean-data              # Fix encoding issues (if needed)
-```
-
-## 📊 Data Format
-
-The system processes Norwegian polling data with:
-- **Delimiter:** Semicolon (`;`)
-- **Date format:** DD/M-YYYY (e.g., "22/8-2025")
-- **Percentages:** "26,7 (50)" format (percentage + seat count)
-- **Houses:** "POLLING_HOUSE / NEWSPAPER" format
-- **Parties:** Ap, Høyre, Frp, SV, Sp, KrF, Venstre, MDG, Rødt, Andre
-
-**Current dataset:** 27 polls from May-August 2025 across 6 polling organizations.
-
-## 🎨 Chart Customization
-
-The chart generator supports:
-
-```bash
-# Different time periods using pnpm script
-pnpm chart 7                    # Weekly snapshot
-pnpm chart 14                   # Bi-weekly (default)  
-pnpm chart 21                   # Monthly view
-
-# Custom output files with organized structure
-pnpm chart 7 charts/weekly-report.png
-pnpm chart 14 charts/current-standings.png
-pnpm chart 21 charts/monthly-analysis.png
-```
-
-**Chart features:**
-- **Norwegian party colors:** Accurate political branding
-- **House effect corrections:** All systematic biases removed
-- **Professional formatting:** Ready for publication/presentation
-- **Data labels:** Exact percentages displayed on bars
-- **Temporal accuracy:** Rolling windows prevent month-boundary artifacts
-
-## 🏠 House Effects Analysis
-
-**View systematic polling biases with `pnpm house-effects`:**
-
-The system identifies and corrects systematic biases in Norwegian polling houses:
-
-- **Verian:** Overestimates Ap by +1.9pts, underestimates Frp by -0.6pts
-- **Norstat:** Strong positive bias for Ap (+0.9pts)
-- **Opinion:** Underestimates Ap (-0.7pts), high Andre bias (+1.1pts)
-- **InFact:** Underestimates Ap (-0.7pts) and Høyre (-0.5pts)
-- **Norfakta:** Major Frp underestimation (-1.5pts), Høyre overestimation (+0.8pts)
-- **Respons:** Negative Ap bias (-0.7pts), positive SV (+0.5pts) and Venstre (+0.6pts)
-
-*All corrections are automatically applied in chart output. Use `pnpm house-effects` for a complete messenger-friendly analysis.*
-
-## 📚 API Usage
-
-For programmatic use:
-
-```typescript
-import { 
-    analyzeNorwegianPolls, 
-    getCurrentStandings, 
-    generateStandingsBarChart,
-    saveStandingsChart 
-} from './src/index';
-
-// Load and analyze data
-const csvContent = readFileSync('./polls.csv', 'utf8');
-const analysis = analyzeNorwegianPolls(csvContent, { 
-    includeAdjustments: true 
-});
-
-// Generate current standings
-const standings = getCurrentStandings(analysis.adjustedPolls!, 14);
-
-// Export chart
-await saveStandingsChart(standings!, 'my-chart.png');
-```
-
-## 🤝 Contributing
-
-This project uses:
-- **TypeScript** with strict typing
-- **Vitest** for testing with UI support
-- **Biome** for modern linting/formatting
-- **pnpm** for fast package management
-- **Chart.js + @napi-rs/canvas** for server-side PNG generation
-
-The codebase assumes data validity (will hard crash on invalid data by design).
-
-## 📄 License
-
-ISC License
-
----
-
-**🎯 TL;DR: Run `pnpm chart` for professional polling charts and `pnpm house-effects` for bias analysis!**

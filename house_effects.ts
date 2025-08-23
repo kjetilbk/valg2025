@@ -1,8 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls } from './src/index';
-import { PARTY_NAMES } from './src/types';
+import { analyzeNorwegianPolls, PARTY_NAMES, type PartyName } from './src';
 
 function displayHouseEffects() {
     console.log('🇳🇴 Norske Meningsmålinger - House Effects Analyse');
@@ -12,7 +11,7 @@ function displayHouseEffects() {
         // Load and analyze data
         const csvContent = readFileSync('./polls.csv', 'utf8');
         const analysis = analyzeNorwegianPolls(csvContent, {
-            includeAdjustments: false
+            includeAdjustments: false,
         });
 
         if (!analysis.houseEffects) {
@@ -24,12 +23,12 @@ function displayHouseEffects() {
 
         // Get all unique houses and sort them
         const houses = Object.keys(analysis.houseEffects).sort();
-        
+
         // Simple list format for each house - show all parties
         for (const house of houses) {
             const effects = analysis.houseEffects[house]!;
             console.log(`${house}:`);
-            
+
             const allEffects = [];
             for (const party of PARTY_NAMES) {
                 const effect = effects[party];
@@ -40,7 +39,7 @@ function displayHouseEffects() {
                     allEffects.push(`${party}: —`);
                 }
             }
-            
+
             console.log(`  ${allEffects.join(', ')}`);
             console.log('');
         }
@@ -56,7 +55,7 @@ function displayHouseEffects() {
 
         for (const [house, effects] of Object.entries(analysis.houseEffects)) {
             for (const [party, effect] of Object.entries(effects)) {
-                if (effect !== undefined && PARTY_NAMES.includes(party)) {
+                if (effect !== undefined && PARTY_NAMES.includes(party as PartyName)) {
                     if (effect > maxPositive.effect) {
                         maxPositive = { house, party, effect };
                     }
@@ -68,13 +67,16 @@ function displayHouseEffects() {
         }
 
         if (maxPositive.effect > 0) {
-            console.log(`🔺 Største overestimering: ${maxPositive.house} overestimerer ${maxPositive.party} med +${maxPositive.effect.toFixed(2)} poeng`);
-        }
-        
-        if (maxNegative.effect < 0) {
-            console.log(`🔻 Største underestimering: ${maxNegative.house} underestimerer ${maxNegative.party} med ${maxNegative.effect.toFixed(2)} poeng`);
+            console.log(
+                `🔺 Største overestimering: ${maxPositive.house} overestimerer ${maxPositive.party} med +${maxPositive.effect.toFixed(2)} poeng`
+            );
         }
 
+        if (maxNegative.effect < 0) {
+            console.log(
+                `🔻 Største underestimering: ${maxNegative.house} underestimerer ${maxNegative.party} med ${maxNegative.effect.toFixed(2)} poeng`
+            );
+        }
     } catch (error) {
         console.error('❌ Feil ved analyse av house effects:', error);
         process.exit(1);

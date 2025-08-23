@@ -1,8 +1,8 @@
 import { parseNorwegianPolls } from './dataParser';
 import { applyHouseEffects } from './houseEffectAdjustment';
 import { calculateHouseEffects } from './houseEffects';
-import { calculateCurrentAverage, calculatePollingAverages } from './pollingAverages';
-import type { AnalysisResult } from './types';
+import { calculatePollingAverages } from './pollingAverages';
+import type { AdjustedPoll, AnalysisResult, PollingAverage } from './types';
 
 export function analyzeNorwegianPolls(
     csvContent: string,
@@ -23,8 +23,8 @@ export function analyzeNorwegianPolls(
     const polls = parseNorwegianPolls(csvContent);
     const houseEffects = calculateHouseEffects(polls);
 
-    let adjustedPolls;
-    let averages;
+    let adjustedPolls: AdjustedPoll[] | undefined;
+    let averages: PollingAverage[] | undefined;
 
     if (includeAdjustments || includeAverages) {
         adjustedPolls = applyHouseEffects(polls, houseEffects);
@@ -37,12 +37,10 @@ export function analyzeNorwegianPolls(
         }
     }
 
-    return {
+    const result: AnalysisResult = {
         polls,
         monthlyBenchmarks: {}, // Legacy field, now empty since we use rolling windows
         houseEffects,
-        adjustedPolls,
-        averages,
         summary: {
             totalPolls: polls.length,
             dateRange: {
@@ -53,4 +51,13 @@ export function analyzeNorwegianPolls(
             months: Array.from(new Set(polls.map((p) => p.month))).sort(),
         },
     };
+
+    if (adjustedPolls) {
+        result.adjustedPolls = adjustedPolls;
+    }
+    if (averages) {
+        result.averages = averages;
+    }
+
+    return result;
 }

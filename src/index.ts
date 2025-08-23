@@ -8,6 +8,7 @@ export { calculateCurrentAverage, calculatePollingAverages } from './pollingAver
 export type {
     AdjustedPoll,
     AnalysisResult,
+    CurrentStandings,
     HouseEffects,
     MonthlyBenchmarks,
     ParsedPoll,
@@ -15,8 +16,6 @@ export type {
     PollingAverage,
 } from './types';
 export { PARTY_NAMES } from './types';
-
-export type { CurrentStandings } from './visualization';
 export {
     generateStandingsBarChart,
     generateStandingsImage,
@@ -25,3 +24,4 @@ export {
     getCurrentStandings,
     saveStandingsChart,
 } from './visualization';
+export { drawWatermark } from './watermark';

@@ -92,7 +92,7 @@ describe('Visualization', () => {
 
             const chart = generateStandingsBarChart(standings);
 
-            expect(chart).toContain('Norske Meningsmålinger');
+            expect(chart).toContain('Gjennomsnitt av meningsmålinger');
             expect(chart).toContain('22/8-2025');
             expect(chart).toContain('14 dagers tilbakeblikk');
             expect(chart).toContain('3 målinger');

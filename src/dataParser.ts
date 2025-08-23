@@ -40,9 +40,9 @@ function getColumnValue(row: Record<string, string>, partyName: PartyName): stri
 }
 
 function parseRow(row: Record<string, string>): ParsedPoll {
-    const fullHouseName = row['Måling']!.trim();
+    const fullHouseName = row.Måling!.trim();
     const house = fullHouseName.split('/')[0]!.trim(); // Extract just the polling house
-    const dateStr = row['Dato']!.trim();
+    const dateStr = row.Dato!.trim();
     const dateInfo = parseNorwegianDate(dateStr);
 
     const parties: Record<PartyName, number> = {} as Record<PartyName, number>;
