@@ -1,8 +1,16 @@
-# Norske Meningsmålinger 2025 🇳🇴
+# House effect-justerte meningsmålinger
 
-Dette systemet analyserer norske meningsmålinger og korrigerer for systematiske skjevheter i måleinstituttene.
+Regner på norske meningsmålinger og korrigerer for systematiske skjevheter i måleinstituttene.
 
-## Hva gjør dette systemet?
+## Siste målinger
+
+### 7-dagers gjennomsnitt
+![7-dagers meningsmålinger](charts/complete-2025-08-23-7day.png)
+
+### 14-dagers gjennomsnitt
+![14-dagers meningsmålinger](charts/complete-2025-08-23-14day.png)
+
+## Hva
 
 Når måleinstitutter publiserer meningsmålinger, har mange av dem systematiske skjevheter - noen overestimerer eller underestimerer konsekvent enkelte partier. Dette kalles "house effects".
 
@@ -20,14 +28,6 @@ Når måleinstitutter publiserer meningsmålinger, har mange av dem systematiske
 3. **Vi korrigerer målingene** ved å justere for disse systematiske skjevhetene
 
 4. **Vi lager diagrammer** som viser den korrigerte situasjonen
-
-## Siste målinger
-
-### 7-dagers gjennomsnitt
-![7-dagers meningsmålinger](charts/complete-2025-08-23-7day.png)
-
-### 14-dagers gjennomsnitt  
-![14-dagers meningsmålinger](charts/complete-2025-08-23-14day.png)
 
 ## Hvordan generere nye diagrammer
 

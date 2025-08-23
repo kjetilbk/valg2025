@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from './src/index';
+import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from '../index';
 
 async function generateChart() {
     console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
@@ -92,7 +92,7 @@ async function generateChart() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
-    console.log('Bruk: npx tsx generate_chart.ts [tilbakeblikk_dager] [utdatafil]');
+    console.log('Bruk: npx tsx src/scripts/generate_chart.ts [tilbakeblikk_dager] [utdatafil]');
     console.log('');
     console.log('Genererer house-effect-justerte meningsmålingdiagrammer med:');
     console.log('• Vertikale søyler (går oppover fra bunnen)');
@@ -102,9 +102,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('• Norske partifarger');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx generate_chart.ts                    # 14-dagers tilbakeblikk, auto filnavn i charts/');
-    console.log('  npx tsx generate_chart.ts 7                  # 7-dagers tilbakeblikk, auto filnavn i charts/');
-    console.log('  npx tsx generate_chart.ts 21 mitt_diagram.png    # 21-dagers tilbakeblikk, tilpasset filnavn');
+    console.log('  npx tsx src/scripts/generate_chart.ts                    # 14-dagers tilbakeblikk, auto filnavn i charts/');
+    console.log('  npx tsx src/scripts/generate_chart.ts 7                  # 7-dagers tilbakeblikk, auto filnavn i charts/');
+    console.log('  npx tsx src/scripts/generate_chart.ts 21 mitt_diagram.png    # 21-dagers tilbakeblikk, tilpasset filnavn');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');

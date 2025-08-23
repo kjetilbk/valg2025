@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls, PARTY_NAMES, type PartyName } from './src';
+import { analyzeNorwegianPolls, PARTY_NAMES, type PartyName } from '../index';
 
 function displayHouseEffects() {
     console.log('🇳🇴 Norske Meningsmålinger - House Effects Analyse');

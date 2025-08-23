@@ -1,9 +1,9 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls, getCurrentStandings } from './src/index';
-import { fetchSeatProjections, calculateBlocAnalysis } from './src/pollOfPollsApi';
-import { generateCombinedChart } from './src/combinedVisualization';
+import { analyzeNorwegianPolls, getCurrentStandings } from '../index';
+import { fetchSeatProjections, calculateBlocAnalysis } from '../pollOfPollsApi';
+import { generateCombinedChart } from '../combinedVisualization';
 
 async function generateAll() {
     console.log('🇳🇴 Norske Stortingsvalg - Komplett Analyse');
@@ -75,7 +75,7 @@ async function generateAll() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Stortingsvalg - Komplett Analyse');
-    console.log('Bruk: npx tsx generate_all.ts [tilbakeblikk_dager] [output_fil]');
+    console.log('Bruk: npx tsx src/scripts/generate_all.ts [tilbakeblikk_dager] [output_fil]');
     console.log('');
     console.log('Genererer komplett analyse med både meningsmålinger og blokk-fordeling:');
     console.log('• Kombinerer polling-diagram og mandatfordeling');
@@ -84,9 +84,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('• Lagrer som PNG-fil');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx generate_all.ts                    # 14-dagers tilbakeblikk');
-    console.log('  npx tsx generate_all.ts 7                  # 7-dagers tilbakeblikk');
-    console.log('  npx tsx generate_all.ts 14 analysis.png    # Custom filnavn');
+    console.log('  npx tsx src/scripts/generate_all.ts                    # 14-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_all.ts 7                  # 7-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_all.ts 14 analysis.png    # Custom filnavn');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');

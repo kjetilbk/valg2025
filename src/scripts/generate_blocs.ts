@@ -1,9 +1,9 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls, getCurrentStandings } from './src/index';
-import { fetchSeatProjections, calculateBlocAnalysis } from './src/pollOfPollsApi';
-import { generateBlocChart } from './src/seatVisualization';
+import { analyzeNorwegianPolls, getCurrentStandings } from '../index';
+import { fetchSeatProjections, calculateBlocAnalysis } from '../pollOfPollsApi';
+import { generateBlocChart } from '../seatVisualization';
 
 async function generateBlocs() {
     console.log('🇳🇴 Norske Stortingsvalg - Blokk-analyse');
@@ -69,7 +69,7 @@ async function generateBlocs() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Stortingsvalg - Blokk-analyse');
-    console.log('Bruk: npx tsx generate_blocs.ts [tilbakeblikk_dager]');
+    console.log('Bruk: npx tsx src/scripts/generate_blocs.ts [tilbakeblikk_dager]');
     console.log('');
     console.log('Analyserer politiske blokker basert på mandatprognose:');
     console.log('• Rød-grønn blokk: Ap, SV, Sp, Rødt, MDG');
@@ -79,9 +79,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('• Flertall: 85 av 169 mandater');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx generate_blocs.ts        # 14-dagers tilbakeblikk');
-    console.log('  npx tsx generate_blocs.ts 7      # 7-dagers tilbakeblikk');
-    console.log('  npx tsx generate_blocs.ts 21     # 21-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_blocs.ts        # 14-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_blocs.ts 7      # 7-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_blocs.ts 21     # 21-dagers tilbakeblikk');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');

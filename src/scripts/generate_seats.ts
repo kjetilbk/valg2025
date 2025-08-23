@@ -1,9 +1,9 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync } from 'node:fs';
-import { analyzeNorwegianPolls, getCurrentStandings } from './src/index';
-import { fetchSeatProjections } from './src/pollOfPollsApi';
-import { generateSeatProjectionChart } from './src/seatVisualization';
+import { analyzeNorwegianPolls, getCurrentStandings } from '../index';
+import { fetchSeatProjections } from '../pollOfPollsApi';
+import { generateSeatProjectionChart } from '../seatVisualization';
 
 async function generateSeats() {
     console.log('🇳🇴 Norske Stortingsvalg - Mandatprognose');
@@ -61,7 +61,7 @@ async function generateSeats() {
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('🇳🇴 Norske Stortingsvalg - Mandatprognose');
-    console.log('Bruk: npx tsx generate_seats.ts [tilbakeblikk_dager]');
+    console.log('Bruk: npx tsx src/scripts/generate_seats.ts [tilbakeblikk_dager]');
     console.log('');
     console.log('Beregner mandatfordeling i Stortinget basert på meningsmålinger:');
     console.log('• Bruker Poll of Polls (www.pollofpolls.no) for offisiell beregning');
@@ -71,9 +71,9 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
     console.log('• House effects justert automatisk');
     console.log('');
     console.log('Eksempler:');
-    console.log('  npx tsx generate_seats.ts        # 14-dagers tilbakeblikk');
-    console.log('  npx tsx generate_seats.ts 7      # 7-dagers tilbakeblikk');
-    console.log('  npx tsx generate_seats.ts 21     # 21-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_seats.ts        # 14-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_seats.ts 7      # 7-dagers tilbakeblikk');
+    console.log('  npx tsx src/scripts/generate_seats.ts 21     # 21-dagers tilbakeblikk');
     console.log('');
     console.log('Argumenter:');
     console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');
