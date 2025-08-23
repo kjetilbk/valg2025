@@ -68,15 +68,15 @@ export interface AnalysisResult {
 }
 
 export const PARTY_NAMES: PartyName[] = [
-    'Ap',
-    'Høyre',
-    'Frp',
+    'Rødt',
     'SV',
+    'Ap',
     'Sp',
+    'MDG',
     'KrF',
     'Venstre',
-    'MDG',
-    'Rødt',
+    'Høyre',
+    'Frp',
     'Andre',
 ];
 
