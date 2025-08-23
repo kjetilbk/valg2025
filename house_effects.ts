@@ -5,8 +5,8 @@ import { analyzeNorwegianPolls } from './src/index';
 import { PARTY_NAMES } from './src/types';
 
 function displayHouseEffects() {
-    console.log('🇳🇴 Norwegian Election Polling - House Effects Analysis');
-    console.log('====================================================\n');
+    console.log('🇳🇴 Norske Meningsmålinger - House Effects Analyse');
+    console.log('===================================================\n');
 
     try {
         // Load and analyze data
@@ -16,11 +16,11 @@ function displayHouseEffects() {
         });
 
         if (!analysis.houseEffects) {
-            console.log('❌ No house effects available');
+            console.log('❌ Ingen house effects tilgjengelig');
             process.exit(1);
         }
 
-        console.log('📊 House Effects (+ = overestimates, - = underestimates):\n');
+        console.log('📊 House Effects (+ = overestimerer, - = underestimerer):\n');
 
         // Get all unique houses and sort them
         const houses = Object.keys(analysis.houseEffects).sort();
@@ -45,10 +45,10 @@ function displayHouseEffects() {
             console.log('');
         }
 
-        console.log('\n📈 Summary:');
-        console.log(`• Analyzed ${Object.keys(analysis.houseEffects).length} polling houses`);
-        console.log('• Effects calculated using rolling ±14-day windows');
-        console.log('• Values show systematic bias vs. time-adjusted benchmarks\n');
+        console.log('\n📈 Sammendrag:');
+        console.log(`• Analyserte ${Object.keys(analysis.houseEffects).length} måleinstitutter`);
+        console.log('• Effekter beregnet med rullende ±14-dagers vinduer');
+        console.log('• Verdier viser systematisk skjevhet vs. tidsjusterte referansepunkter\n');
 
         // Find largest positive and negative biases
         let maxPositive = { house: '', party: '', effect: 0 };
@@ -68,29 +68,29 @@ function displayHouseEffects() {
         }
 
         if (maxPositive.effect > 0) {
-            console.log(`🔺 Largest overestimation: ${maxPositive.house} overestimates ${maxPositive.party} by +${maxPositive.effect.toFixed(2)} pts`);
+            console.log(`🔺 Største overestimering: ${maxPositive.house} overestimerer ${maxPositive.party} med +${maxPositive.effect.toFixed(2)} poeng`);
         }
         
         if (maxNegative.effect < 0) {
-            console.log(`🔻 Largest underestimation: ${maxNegative.house} underestimates ${maxNegative.party} by ${maxNegative.effect.toFixed(2)} pts`);
+            console.log(`🔻 Største underestimering: ${maxNegative.house} underestimerer ${maxNegative.party} med ${maxNegative.effect.toFixed(2)} poeng`);
         }
 
     } catch (error) {
-        console.error('❌ Error analyzing house effects:', error);
+        console.error('❌ Feil ved analyse av house effects:', error);
         process.exit(1);
     }
 }
 
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
-    console.log('🇳🇴 Norwegian Election Polling - House Effects Analysis');
-    console.log('Usage: npx tsx house_effects.ts');
+    console.log('🇳🇴 Norske Meningsmålinger - House Effects Analyse');
+    console.log('Bruk: npx tsx house_effects.ts');
     console.log('');
-    console.log('Displays systematic biases detected in Norwegian polling houses:');
-    console.log('• Rolling window calculations (±14 days)');
-    console.log('• Positive values = house overestimates party');
-    console.log('• Negative values = house underestimates party');
-    console.log('• Shows largest biases for each house across all parties');
+    console.log('Viser systematiske skjevheter oppdaget i norske måleinstitutter:');
+    console.log('• Rullende vindusberegninger (±14 dager)');
+    console.log('• Positive verdier = instituttet overestimerer partiet');
+    console.log('• Negative verdier = instituttet underestimerer partiet');
+    console.log('• Viser største skjevheter for hvert institutt på tvers av alle partier');
     process.exit(0);
 }
 

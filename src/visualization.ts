@@ -74,11 +74,11 @@ export function generateStandingsBarChart(standings: CurrentStandings): string {
     const maxPercentage = Math.max(...parties.map((p) => p.percentage));
     const barWidth = 50; // Maximum bar width in characters
 
-    let chart = `Norwegian Election Polling - Current Standings\n`;
+    let chart = `Norske Meningsmålinger - Nåværende Stilling\n`;
     chart += `${'='.repeat(50)}\n`;
-    chart += `As of: ${date} (${lookbackDays} days lookback)\n`;
-    chart += `Based on: ${pollCount} polls from ${houses.length} houses (${houses.join(', ')})\n`;
-    chart += `House effects: ADJUSTED\n\n`;
+    chart += `Per: ${date} (${lookbackDays} dagers tilbakeblikk)\n`;
+    chart += `Basert på: ${pollCount} målinger fra ${houses.length} institutter (${houses.join(', ')})\n`;
+    chart += `House effects: JUSTERT\n\n`;
 
     for (const party of parties) {
         const percentage = party.percentage;
@@ -89,7 +89,7 @@ export function generateStandingsBarChart(standings: CurrentStandings): string {
         chart += `${party.displayName}${spaces}${percentage.toFixed(1)}% ${bar}\n`;
     }
 
-    chart += `\nTotal: ${parties.reduce((sum, p) => sum + p.percentage, 0).toFixed(1)}%\n`;
+    chart += `\nTotalt: ${parties.reduce((sum, p) => sum + p.percentage, 0).toFixed(1)}%\n`;
 
     return chart;
 }
@@ -105,7 +105,7 @@ export function generateStandingsSummary(standings: CurrentStandings): string {
         .map((p) => `${p.displayName} ${p.percentage.toFixed(1)}%`)
         .join(', ');
 
-    return `Current (${lookbackDays}d, ${pollCount} polls): ${summary}`;
+    return `Nåværende (${lookbackDays}d, ${pollCount} målinger): ${summary}`;
 }
 
 /**
@@ -219,8 +219,8 @@ export async function generateStandingsImage(
             ChartDataLabels
         );
 
-        const chartTitle = title || `Norwegian Election Polling - Current Standings (${date})`;
-        const subtitle = `${lookbackDays}-day lookback • ${pollCount} polls from ${houses.length} houses • House effects adjusted`;
+        const chartTitle = title || `Norske Meningsmålinger - Nåværende Stilling (${date})`;
+        const subtitle = `${lookbackDays}-dagers tilbakeblikk • ${pollCount} målinger fra ${houses.length} institutter • House effects justert`;
 
         const configuration = {
             type: 'bar',
@@ -228,7 +228,7 @@ export async function generateStandingsImage(
                 labels: parties.map((p) => p.displayName),
                 datasets: [
                     {
-                        label: 'Support (%)',
+                        label: 'Oppslutning (%)',
                         data: parties.map((p) => p.percentage),
                         backgroundColor: parties.map((p) => PARTY_COLORS[p.party] || '#808080'),
                         borderColor: parties.map((p) => PARTY_COLORS[p.party] || '#808080'),
@@ -270,7 +270,7 @@ export async function generateStandingsImage(
                     x: {
                         title: {
                             display: true,
-                            text: 'Parties',
+                            text: 'Partier',
                         },
                     },
                     y: {
@@ -281,7 +281,7 @@ export async function generateStandingsImage(
                         ),
                         title: {
                             display: true,
-                            text: 'Support (%)',
+                            text: 'Oppslutning (%)',
                         },
                         grid: {
                             display: true,

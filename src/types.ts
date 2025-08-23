@@ -79,3 +79,61 @@ export const PARTY_NAMES: PartyName[] = [
     'Rødt',
     'Andre',
 ];
+
+export interface CurrentStandings {
+    date: string;
+    lookbackDays: number;
+    pollCount: number;
+    houses: string[];
+    standings: Array<{
+        party: PartyName;
+        displayName: string;
+        percentage: number;
+    }>;
+}
+
+/**
+ * Seat projection results using Sainte-Laguë method
+ */
+export interface SeatProjection {
+    date: string;
+    lookbackDays: number;
+    pollCount: number;
+    houses: string[];
+    totalSeats: number;
+    threshold: number;
+    eligibleParties: number;
+    thresholdParties: number;
+    projections: Array<{
+        party: PartyName;
+        displayName: string;
+        percentage: number;
+        seats: number;
+        aboveThreshold: boolean;
+    }>;
+}
+
+/**
+ * Political bloc analysis
+ */
+export interface BlocAnalysis {
+    date: string;
+    lookbackDays: number;
+    pollCount: number;
+    houses: string[];
+    totalSeats: number;
+    majority: number;
+    blocs: {
+        red: BlocInfo;
+        blue: BlocInfo;
+        other: BlocInfo;
+    };
+}
+
+export interface BlocInfo {
+    name: string;
+    parties: readonly string[];
+    seats: number;
+    percentage: number;
+    hasMajority: boolean;
+}

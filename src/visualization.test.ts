@@ -92,10 +92,10 @@ describe('Visualization', () => {
 
             const chart = generateStandingsBarChart(standings);
 
-            expect(chart).toContain('Norwegian Election Polling');
+            expect(chart).toContain('Norske Meningsmålinger');
             expect(chart).toContain('22/8-2025');
-            expect(chart).toContain('14 days lookback');
-            expect(chart).toContain('3 polls');
+            expect(chart).toContain('14 dagers tilbakeblikk');
+            expect(chart).toContain('3 målinger');
             expect(chart).toContain('Ap      25.5%');
             expect(chart).toContain('Frp     20.1%');
             expect(chart).toContain('█'); // Should contain bar characters
@@ -131,7 +131,7 @@ describe('Visualization', () => {
 
             const summary = generateStandingsSummary(standings);
 
-            expect(summary).toContain('Current (14d, 3 polls)');
+            expect(summary).toContain('Nåværende (14d, 3 målinger)');
             expect(summary).toContain('Ap 25.5%');
             expect(summary).toContain('Frp 20.1%');
             expect(summary).toContain('Høyre 15.3%');

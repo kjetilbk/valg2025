@@ -4,8 +4,8 @@ import { readFileSync } from 'fs';
 import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from './src/index';
 
 async function generateChart() {
-    console.log('🇳🇴 Norwegian Election Polling - Chart Generator');
-    console.log('================================================\n');
+    console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
+    console.log('===============================================\n');
 
     // Get command line arguments for lookback days
     const lookbackDays = parseInt(process.argv[2]) || 14;
@@ -18,7 +18,7 @@ async function generateChart() {
         });
 
         if (!analysis.adjustedPolls) {
-            console.log('❌ No adjusted polls available');
+            console.log('❌ Ingen justerte målinger tilgjengelig');
             process.exit(1);
         }
 
@@ -26,7 +26,7 @@ async function generateChart() {
         const standings = getCurrentStandings(analysis.adjustedPolls, lookbackDays, { sortByPercentage: false });
         
         if (!standings) {
-            console.log('❌ No polling data available for the specified timeframe');
+            console.log('❌ Ingen måledata tilgjengelig for angitt tidsramme');
             process.exit(1);
         }
 
@@ -42,60 +42,60 @@ async function generateChart() {
             filename = `charts/polling-${formattedDate}-${lookbackDays}day.png`;
         }
 
-        console.log(`📊 Generating chart with ${lookbackDays}-day lookback...`);
-        console.log(`💾 Output file: ${filename}\n`);
+        console.log(`📊 Genererer diagram med ${lookbackDays}-dagers tilbakeblikk...`);
+        console.log(`💾 Utdatafil: ${filename}\n`);
 
-        console.log('📈 Current Standings:');
-        console.log('=====================');
+        console.log('📈 Nåværende Stilling:');
+        console.log('======================');
         console.log(generateStandingsBarChart(standings));
 
         // Try to save as PNG
-        console.log('🎨 Generating PNG chart...');
+        console.log('🎨 Genererer PNG-diagram...');
         
         const success = await saveStandingsChart(standings, filename, {
             width: 1000,
             height: 700,
-            title: `Norwegian Election Polling - Current Standings (${standings.date})`
+            title: `Norske Meningsmålinger - Nåværende Stilling (${standings.date})`
         });
 
         if (success) {
-            console.log(`✅ Chart successfully saved as: ${filename}`);
-            console.log(`📋 Based on ${standings.pollCount} polls from ${standings.houses.length} polling houses`);
-            console.log(`🏠 Houses: ${standings.houses.join(', ')}`);
+            console.log(`✅ Diagram lagret som: ${filename}`);
+            console.log(`📋 Basert på ${standings.pollCount} målinger fra ${standings.houses.length} institutter`);
+            console.log(`🏠 Institutter: ${standings.houses.join(', ')}`);
         } else {
-            console.log('⚠️  Could not generate PNG image');
-            console.log('   This might be because Chart.js native dependencies are not compiled');
-            console.log('   Try running: pnpm rebuild canvas');
-            console.log('   Or install system dependencies for canvas (varies by OS)');
+            console.log('⚠️  Kunne ikke generere PNG-bilde');
+            console.log('   Dette kan være fordi Chart.js native avhengigheter ikke er kompilert');
+            console.log('   Prøv å kjøre: pnpm rebuild canvas');
+            console.log('   Eller installer systemavhengigheter for canvas (varierer per OS)');
             process.exit(1);
         }
 
     } catch (error) {
-        console.error('❌ Error generating chart:', error);
+        console.error('❌ Feil ved generering av diagram:', error);
         process.exit(1);
     }
 }
 
 // Show usage if requested
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
-    console.log('🇳🇴 Norwegian Election Polling - Chart Generator');
-    console.log('Usage: npx tsx generate_chart.ts [lookback_days] [output_file]');
+    console.log('🇳🇴 Norske Meningsmålinger - Diagramgenerator');
+    console.log('Bruk: npx tsx generate_chart.ts [tilbakeblikk_dager] [utdatafil]');
     console.log('');
-    console.log('Generates house-effect-adjusted polling charts with:');
-    console.log('• Vertical bars (going up from bottom)');
-    console.log('• Party labels on bottom axis');  
-    console.log('• Data values displayed on top of each bar');
-    console.log('• Original party order (Ap, Høyre, Frp, SV, Sp, KrF, Venstre, MDG, Rødt, Andre)');
-    console.log('• Norwegian party colors');
+    console.log('Genererer house-effect-justerte meningsmålingdiagrammer med:');
+    console.log('• Vertikale søyler (går oppover fra bunnen)');
+    console.log('• Partietiketter på bunnnaksen');  
+    console.log('• Dataverdier vist på toppen av hver søyle');
+    console.log('• Original partirekkefølge (Ap, Høyre, Frp, SV, Sp, KrF, Venstre, MDG, Rødt, Andre)');
+    console.log('• Norske partifarger');
     console.log('');
-    console.log('Examples:');
-    console.log('  npx tsx generate_chart.ts                    # 14-day lookback, auto filename in charts/');
-    console.log('  npx tsx generate_chart.ts 7                  # 7-day lookback, auto filename in charts/');
-    console.log('  npx tsx generate_chart.ts 21 my_chart.png    # 21-day lookback, custom filename');
+    console.log('Eksempler:');
+    console.log('  npx tsx generate_chart.ts                    # 14-dagers tilbakeblikk, auto filnavn i charts/');
+    console.log('  npx tsx generate_chart.ts 7                  # 7-dagers tilbakeblikk, auto filnavn i charts/');
+    console.log('  npx tsx generate_chart.ts 21 mitt_diagram.png    # 21-dagers tilbakeblikk, tilpasset filnavn');
     console.log('');
-    console.log('Arguments:');
-    console.log('  lookback_days  Number of days to include (default: 14)');
-    console.log('  output_file    PNG filename (default: charts/polling-YYYY-MM-DD-{days}day.png)');
+    console.log('Argumenter:');
+    console.log('  tilbakeblikk_dager  Antall dager å inkludere (standard: 14)');
+    console.log('  utdatafil          PNG-filnavn (standard: charts/polling-YYYY-MM-DD-{dager}day.png)');
     process.exit(0);
 }
 

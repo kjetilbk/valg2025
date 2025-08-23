@@ -11,16 +11,20 @@ The most important feature of this repository is the **chart generation script**
 pnpm install
 
 # Generate charts using pnpm scripts (recommended)
-pnpm chart                           # Default 14-day chart
+pnpm chart                           # Default 14-day chart (auto-saved to charts/)
 pnpm chart 7                         # Weekly chart
 pnpm chart 21 charts/monthly.png     # Custom chart with path
 pnpm chart 14 charts/latest.png      # Organized in charts/ folder
+
+# Analyze house effects (great for sharing)
+pnpm house-effects                   # Show systematic polling biases
 
 # Alternative: Direct script usage
 npx tsx generate_chart.ts 7 weekly.png
 
 # See all options
 pnpm chart --help
+pnpm house-effects --help
 ```
 
 ## 📊 What You Get
@@ -33,7 +37,7 @@ pnpm chart --help
 - ✅ **Original party order** (political spectrum order)
 - ✅ **Configurable time windows** (7, 14, 21+ days)
 
-**Plus ASCII charts** for terminal/console display.
+**Plus ASCII charts** for terminal/console display and **house effects analysis** for understanding polling biases.
 
 ## 🏗️ Project Overview
 
@@ -90,7 +94,9 @@ npx tsx generate_chart.ts --help
 ```
 valg2025/
 ├── generate_chart.ts          # 🎯 MAIN SCRIPT - Chart generator
+├── house_effects.ts          # 📊 House effects analysis tool
 ├── polls.csv                  # Raw Norwegian polling data
+├── charts/                   # Generated chart outputs
 ├── src/
 │   ├── visualization.ts       # Chart generation & ASCII output
 │   ├── houseEffects.ts       # Rolling window bias calculation
@@ -101,25 +107,26 @@ valg2025/
 │   ├── types.ts              # TypeScript definitions
 │   └── *.test.ts             # Comprehensive test suites
 ├── CLAUDE.md                 # Development documentation
+├── biome.json                # Code quality configuration
 └── package.json              # Dependencies & scripts
 ```
 
 ## 🧪 Development & Testing
 
 ```bash
-# Generate charts
-pnpm chart [days] [filename]  # Main chart generation command
+# Main commands
+pnpm chart [days] [filename]  # Generate polling charts (main feature)
+pnpm house-effects            # Analyze systematic polling biases
 
-# Run tests
-pnpm test:run                  # Run once
+# Development commands
+pnpm test:run                 # Run tests once
 pnpm test                     # Watch mode
 pnpm test:ui                  # Visual test runner
+pnpm check                    # Lint and format code
+npx tsc --noEmit             # Type checking
 
-# Type checking
-npx tsc --noEmit
-
-# Data cleaning (if needed)
-pnpm clean-data
+# Utilities
+pnpm clean-data              # Fix encoding issues (if needed)
 ```
 
 ## 📊 Data Format
@@ -156,18 +163,20 @@ pnpm chart 21 charts/monthly-analysis.png
 - **Data labels:** Exact percentages displayed on bars
 - **Temporal accuracy:** Rolling windows prevent month-boundary artifacts
 
-## 🏠 House Effects Detected
+## 🏠 House Effects Analysis
 
-The system identifies systematic biases in Norwegian polling houses:
+**View systematic polling biases with `pnpm house-effects`:**
 
-- **Verian:** Overestimates Ap by +1.87pts, underestimates Frp by -0.62pts
-- **Norstat:** Strong positive bias for Ap (+0.91pts)
-- **Opinion:** Underestimates Ap (-0.73pts), high Andre bias (+1.10pts)
-- **InFact:** Underestimates Ap (-0.69pts) and Høyre (-0.53pts)
-- **Norfakta:** Major Frp underestimation (-1.52pts), Høyre overestimation (+0.80pts)
-- **Respons:** Negative Ap bias (-0.72pts), positive SV (+0.54pts) and Venstre (+0.58pts)
+The system identifies and corrects systematic biases in Norwegian polling houses:
 
-*All corrections are automatically applied in chart output.*
+- **Verian:** Overestimates Ap by +1.9pts, underestimates Frp by -0.6pts
+- **Norstat:** Strong positive bias for Ap (+0.9pts)
+- **Opinion:** Underestimates Ap (-0.7pts), high Andre bias (+1.1pts)
+- **InFact:** Underestimates Ap (-0.7pts) and Høyre (-0.5pts)
+- **Norfakta:** Major Frp underestimation (-1.5pts), Høyre overestimation (+0.8pts)
+- **Respons:** Negative Ap bias (-0.7pts), positive SV (+0.5pts) and Venstre (+0.6pts)
+
+*All corrections are automatically applied in chart output. Use `pnpm house-effects` for a complete messenger-friendly analysis.*
 
 ## 📚 API Usage
 
@@ -198,9 +207,10 @@ await saveStandingsChart(standings!, 'my-chart.png');
 
 This project uses:
 - **TypeScript** with strict typing
-- **Vitest** for testing  
-- **Biome** for linting/formatting
-- **pnpm** for package management
+- **Vitest** for testing with UI support
+- **Biome** for modern linting/formatting
+- **pnpm** for fast package management
+- **Chart.js + @napi-rs/canvas** for server-side PNG generation
 
 The codebase assumes data validity (will hard crash on invalid data by design).
 
@@ -210,4 +220,4 @@ ISC License
 
 ---
 
-**🎯 TL;DR: Run `pnpm chart` to get professional Norwegian election polling charts with house effect corrections applied!**
+**🎯 TL;DR: Run `pnpm chart` for professional polling charts and `pnpm house-effects` for bias analysis!**
