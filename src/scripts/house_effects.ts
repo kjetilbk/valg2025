@@ -1,6 +1,5 @@
 #!/usr/bin/env npx tsx
 
-import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, PARTY_NAMES, type PartyName } from '../index';
 
 function displayHouseEffects() {
@@ -9,8 +8,7 @@ function displayHouseEffects() {
 
     try {
         // Load and analyze data
-        const csvContent = readFileSync('./polls.csv', 'utf8');
-        const analysis = analyzeNorwegianPolls(csvContent, {
+        const analysis = analyzeNorwegianPolls({
             includeAdjustments: false,
         });
 

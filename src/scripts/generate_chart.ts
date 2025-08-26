@@ -1,6 +1,5 @@
 #!/usr/bin/env npx tsx
 
-import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings, saveStandingsChart, generateStandingsBarChart } from '../index';
 import type { WeightingMethod } from '../pollingAverages';
 
@@ -17,8 +16,7 @@ async function generateChart() {
     
     try {
         // Load and analyze data first to get latest poll date
-        const csvContent = readFileSync('./polls.csv', 'utf8');
-        const analysis = analyzeNorwegianPolls(csvContent, {
+        const analysis = analyzeNorwegianPolls({
             includeAdjustments: true
         });
 

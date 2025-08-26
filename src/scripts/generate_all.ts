@@ -1,6 +1,5 @@
 #!/usr/bin/env npx tsx
 
-import { readFileSync } from 'node:fs';
 import { analyzeNorwegianPolls, getCurrentStandings } from '../index';
 import { fetchSeatProjections, calculateBlocAnalysis } from '../pollOfPollsApi';
 import { generateCombinedChart } from '../combinedVisualization';
@@ -19,8 +18,7 @@ async function generateAll() {
     
     try {
         // Load and analyze data
-        const csvContent = readFileSync('./polls.csv', 'utf8');
-        const analysis = analyzeNorwegianPolls(csvContent, {
+        const analysis = analyzeNorwegianPolls({
             includeAdjustments: true
         });
 

@@ -11,6 +11,7 @@
         "house-effects": "tsx src/scripts/house_effects.ts",
         "seats": "tsx src/scripts/generate_seats.ts",
         "blocs": "tsx src/scripts/generate_blocs.ts",
+        "trends": "tsx src/scripts/generate_bloc_trends.ts",
         "all": "tsx src/scripts/generate_all.ts",
         "lint": "biome lint src",
         "format": "biome format --write src",

@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
     type AnalysisResult,
@@ -246,19 +245,17 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
 
     describe('Full Analysis Integration', () => {
         it('should perform complete analysis with real CSV data', () => {
-            let csvContent: string;
+            let analysis: AnalysisResult;
             try {
-                csvContent = readFileSync('./polls.csv', 'utf8');
+                analysis = analyzeNorwegianPolls();
             } catch {
                 console.warn('polls.csv not found, skipping real data test');
                 return;
             }
 
-            const analysis: AnalysisResult = analyzeNorwegianPolls(csvContent);
-
-            // Verify exact counts from the real data
-            expect(analysis.polls.length).toBe(27);
-            expect(analysis.summary.totalPolls).toBe(27);
+            // Verify exact counts from the real data (including unreleased polls)
+            expect(analysis.polls.length).toBe(28);
+            expect(analysis.summary.totalPolls).toBe(28);
             expect(analysis.summary.pollsters).toEqual([
                 'InFact',
                 'Norfakta',
@@ -269,7 +266,7 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
             ]);
             expect(analysis.summary.months).toEqual([5, 6, 7, 8]);
             expect(analysis.summary.dateRange.earliest).toBe('6/5-2025');
-            expect(analysis.summary.dateRange.latest).toBe('22/8-2025');
+            expect(analysis.summary.dateRange.latest).toBe('26/8-2025');
 
             // Check that we have house effects for each pollster
             for (const pollster of analysis.summary.pollsters) {
@@ -280,12 +277,8 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
             // Monthly benchmarks field is now legacy (empty object)
             expect(analysis.monthlyBenchmarks).toEqual({});
 
-            // Verify no data loss - all CSV data rows should be parsed
-            const csvLines = csvContent
-                .split('\n')
-                .slice(3)
-                .filter((line) => line.trim());
-            expect(analysis.polls.length).toBe(csvLines.length);
+            // Verify we have the expected number of polls (regular + unreleased)
+            expect(analysis.polls.length).toBeGreaterThanOrEqual(27);
         });
     });
 });

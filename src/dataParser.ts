@@ -1,4 +1,5 @@
 import * as Papa from 'papaparse';
+import { readFileSync, existsSync } from 'node:fs';
 import type { ParsedPoll, PartyName } from './types';
 import { PARTY_NAMES } from './types';
 
@@ -81,4 +82,34 @@ export function parseNorwegianPolls(csvContent: string): ParsedPoll[] {
     const polls = parseResult.data.map((row) => parseRow(row!));
     polls.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
     return polls;
+}
+
+/**
+ * Load and merge polls from both regular and unreleased files
+ */
+export function loadAllPolls(): ParsedPoll[] {
+    // Load regular polls
+    const regularCsv = readFileSync('./polls.csv', 'utf8');
+    
+    // Load unreleased polls if they exist
+    let combinedCsv = regularCsv;
+    if (existsSync('./unreleased_polls.csv')) {
+        const unreleasedCsv = readFileSync('./unreleased_polls.csv', 'utf8');
+        
+        // Extract just the data lines from unreleased polls (skip headers)
+        const unreleasedLines = unreleasedCsv.split('\n');
+        const unreleasedDataStart = unreleasedLines.findIndex((line) => line.includes('Måling'));
+        
+        if (unreleasedDataStart >= 0) {
+            const unreleasedDataLines = unreleasedLines.slice(unreleasedDataStart + 1)
+                .filter(line => line.trim() && !line.includes('Måling'));
+            
+            if (unreleasedDataLines.length > 0) {
+                // Append unreleased data to regular polls
+                combinedCsv = regularCsv.trim() + '\n' + unreleasedDataLines.join('\n');
+            }
+        }
+    }
+    
+    return parseNorwegianPolls(combinedCsv);
 }

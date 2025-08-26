@@ -1,11 +1,10 @@
-import { parseNorwegianPolls } from './dataParser';
+import { loadAllPolls } from './dataParser';
 import { applyHouseEffects } from './houseEffectAdjustment';
 import { calculateHouseEffects } from './houseEffects';
 import { calculatePollingAverages } from './pollingAverages';
 import type { AdjustedPoll, AnalysisResult, PollingAverage } from './types';
 
 export function analyzeNorwegianPolls(
-    csvContent: string,
     options: {
         includeAdjustments?: boolean;
         includeAverages?: boolean;
@@ -20,7 +19,7 @@ export function analyzeNorwegianPolls(
         averageStepDays = 7,
     } = options;
 
-    const polls = parseNorwegianPolls(csvContent);
+    const polls = loadAllPolls();
     const houseEffects = calculateHouseEffects(polls);
 
     let adjustedPolls: AdjustedPoll[] | undefined;
