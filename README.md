@@ -5,10 +5,10 @@ Regner på norske meningsmålinger og korrigerer for systematiske skjevheter i m
 ## Siste målinger
 
 ### 7-dagers gjennomsnitt
-![7-dagers meningsmålinger](charts/complete-2025-08-22-7day.png)
+![7-dagers meningsmålinger](charts/complete-2025-08-27-7day.png)
 
 ### 14-dagers gjennomsnitt
-![14-dagers meningsmålinger](charts/complete-2025-08-22-14day.png)
+![14-dagers meningsmålinger](charts/complete-2025-08-27-14day.png)
 
 ## Hva
 

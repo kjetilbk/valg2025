@@ -13,6 +13,7 @@
         "blocs": "tsx src/scripts/generate_blocs.ts",
         "trends": "tsx src/scripts/generate_bloc_trends.ts",
         "all": "tsx src/scripts/generate_all.ts",
+        "refresh": "tsx src/scripts/refresh_polls.ts",
         "lint": "biome lint src",
         "format": "biome format --write src",
         "check": "biome lint src && biome check src && biome format src && tsc"

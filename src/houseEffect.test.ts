@@ -254,8 +254,8 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
             }
 
             // Verify exact counts from the real data (including unreleased polls)
-            expect(analysis.polls.length).toBe(28);
-            expect(analysis.summary.totalPolls).toBe(28);
+            expect(analysis.polls.length).toBe(37);
+            expect(analysis.summary.totalPolls).toBe(37);
             expect(analysis.summary.pollsters).toEqual([
                 'InFact',
                 'Norfakta',
@@ -264,8 +264,8 @@ Opinion/DA;20/8-2025;24,8 (47);17,9 (34);21,5 (41);5,5 (10);6,8 (13);4,5 (8);3,9
                 'Respons',
                 'Verian',
             ]);
-            expect(analysis.summary.months).toEqual([5, 6, 7, 8]);
-            expect(analysis.summary.dateRange.earliest).toBe('6/5-2025');
+            expect(analysis.summary.months).toEqual([4, 5, 6, 7, 8]);
+            expect(analysis.summary.dateRange.earliest).toBe('1/4-2025');
             expect(analysis.summary.dateRange.latest).toBe('26/8-2025');
 
             // Check that we have house effects for each pollster

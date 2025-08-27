@@ -10,6 +10,8 @@ export function analyzeNorwegianPolls(
         includeAverages?: boolean;
         averageTimeSpan?: number;
         averageStepDays?: number;
+        useTimeDecayedHouseEffects?: boolean;
+        decayHalfLifeDays?: number;
     } = {}
 ): AnalysisResult {
     const {
@@ -17,10 +19,18 @@ export function analyzeNorwegianPolls(
         includeAverages = false,
         averageTimeSpan = 14,
         averageStepDays = 7,
+        useTimeDecayedHouseEffects = true,  // Default to true for better accuracy
+        decayHalfLifeDays = 30,
     } = options;
 
     const polls = loadAllPolls();
-    const houseEffects = calculateHouseEffects(polls);
+    const houseEffects = calculateHouseEffects(polls, {
+        useTimeDecay: useTimeDecayedHouseEffects,
+        timeDecayOptions: {
+            decayHalfLifeDays,
+            windowDays: 21
+        }
+    });
 
     let adjustedPolls: AdjustedPoll[] | undefined;
     let averages: PollingAverage[] | undefined;

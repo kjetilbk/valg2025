@@ -1,5 +1,6 @@
 import type { HouseEffect, HouseEffects, ParsedPoll, PollWithDeviations } from './types';
 import { PARTY_NAMES } from './types';
+import { calculateTimeDecayedHouseEffects, type TimeDecayOptions } from './timeDecayedHouseEffects';
 
 /**
  * Calculate rolling window benchmark for a specific poll
@@ -57,7 +58,29 @@ function calculateBenchmarkForPoll(
 /**
  * Calculate house effects using rolling time window benchmarks
  */
-export function calculateHouseEffects(polls: ParsedPoll[]): HouseEffects {
+export function calculateHouseEffects(
+    polls: ParsedPoll[], 
+    options?: { 
+        useTimeDecay?: boolean; 
+        timeDecayOptions?: TimeDecayOptions 
+    }
+): HouseEffects {
+    // Use time-decayed calculation if requested
+    if (options?.useTimeDecay) {
+        const enhanced = calculateTimeDecayedHouseEffects(polls, options.timeDecayOptions);
+        
+        // Convert to standard HouseEffects format for backward compatibility
+        const result: HouseEffects = {};
+        for (const [house, effect] of Object.entries(enhanced)) {
+            result[house] = {
+                pollCount: effect.pollCount,
+                ...effect.parties
+            };
+        }
+        return result;
+    }
+
+    // Original rolling window implementation
     // Calculate deviations for each poll against its rolling window benchmark
     const pollsWithDeviations: PollWithDeviations[] = polls.map((poll) => {
         const benchmark = calculateBenchmarkForPoll(poll, polls);

@@ -26,3 +26,5 @@ export {
 } from './visualization';
 export { drawWatermark } from './watermark';
 export { generateBlocTrendData, generateBlocTrendChart, saveBlocTrendChart } from './blocTrendVisualization';
+export { refreshPolls, getDateRange } from './pollRefresh';
+export { calculateTimeDecayedHouseEffects, type TimeDecayOptions, type EnhancedHouseEffects } from './timeDecayedHouseEffects';
